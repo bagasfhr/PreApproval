@@ -1,0 +1,16 @@
+get_data_value.php
+global_func_telesales.php
+tele_assignment_agent.php
+tele_customer_data_cust_new_save.php
+tele_customer_data_dev_list.php
+tele_customer_data_dev_new_save.php
+tele_customer_data_list.php
+tele_customer_data_new_save.php
+tele_monitoring_act.php
+tele_monitoring_data.php
+tele_param_assign_data.php
+tele_param_assign_det.php
+tele_param_assign_list.php
+tele_param_assign_save.php
+tele_task_inquiry_act.php
+tele_task_inquiry_data.php
