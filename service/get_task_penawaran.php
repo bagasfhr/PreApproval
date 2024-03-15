@@ -5,30 +5,20 @@ ini_set('upload_max_filesize', '264M');
 ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 3000);
 
-// ini_set('display_errors', '1');
-// ini_set('display_startup_errors', '1');
-// error_reporting(E_ALL);
+include "../../sysconf/db_config.php";
 
-/* config mssql */
-// $server = '10.0.11.142';
-// $server = '10.0.89.142';
-// // $username = 'mitusr';  
-// // $password = 'WOM@2022';
-// $username = 'mitusr';  
-// $password = 'WOM@2022';
-
-$server = '10.0.89.217';
-$username = 'mitusr';  
-$password = 'WOM@2022';
+$server = $server_staging;
+$username = $username_staging;  
+$password = $password_staging;
 $con = mssql_connect($server, $username, $password);
-mssql_select_db( "WISE_STAGING", $con );
+mssql_select_db( $dbname_staging, $con );
 
 
 /* config mysql */ 
-$conf_ip            = "localhost";  
-$conf_user          = "es";
-$conf_passwd        = "0218Galunggung";
-$conf_db              = "db_wom";
+$conf_ip            = $ip_conf;  
+$conf_user          = $user_conf;
+$conf_passwd        = $password_conf;
+$conf_db              = $dbname;
 
 
 function connectDB() {
