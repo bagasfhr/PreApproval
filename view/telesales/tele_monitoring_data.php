@@ -1,64 +1,36 @@
 <?php
- ###############################################################################################################
-#																												#
-#                   `---:/.     																				#			
-#               .--.    `+h.   																					#
-#            `--`         om   																					#
-#          `:-   `-:-`    :M.  		___________.__                .__                  _____  __   				#
-#         .:#` :ydy++y    +M`  		\_   _____/|  | ___.__.______ |  |__   ___________/ ____\/  |_ 				#
-#        :.  #hm+.   /`   mh   		 |    __)_ |  |<   |  |\____ \|  |  \ /  ___/  _ \   __\\   __\				#
-#       :`  +Ns`     /   oN-   		 |        \|  |_\___  ||  |_> >   Y  \\___ (  <_> )  |   |  | 				#
-#      /`  +N+      ::.-oN+    		/_______  /|____/ ____||   __/|___|  /____  >____/|__|   |__|				#
-#     :.  .No     `:`# /No     		        \/      \/     |__|        \/     \/  								#
-#    `/   +M`   `--`##sN+      		   _____            _             _      _____           _            		#
-#    :`   .m/..--`  -dd-       		 / ____|          | |           | |    / ____|         | |           		#
-#    +    .:.``   .ymo`        		| |     ___  _ __ | |_ __ _  ___| |_  | |     ___ _ __ | |_ ___ _ __ 		#
-#   /:  --     :yms.          		| |    / _ \| '_ \| __/ _` |/ __| __| | |    / _ \ '_ \| __/ _ \ '__|		#
-#     s+/.  ./smh+`            		| |___| (_) | | | | || (_| | (__| |_  | |___|  __/ | | | ||  __/ |   		#
-#      -oyhhyo:`               		 \_____\___/|_| |_|\__\__,_|\___|\__|  \_____\___|_| |_|\__\___|_|			#
-#																												#
-#	-------------------------																					#
-#																												#
- ###############################################################################################################
 
-
- 
-######################################### C O N F I G U R A T I O N   F I L E ###################################
-include "../../sysconf/global_func.php";
-include "../../sysconf/session.php";
-include "../../sysconf/db_config.php";
+$path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "session.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
 
 $condb = connectDB();
 
-	# DATA FIELD
 	$aColumns = array(  
 		'a.id', 'b.campaign_name', 'a.customer_id_ro', 'a.agrmnt_no', 'a.customer_name', 
 		'a.spv_id', 'a.assign_to', 'a.modif_time', 'a.call_status', 
 		'a.call_status_sub1', 'a.last_followup_by', 'a.opsi_penanganan');
-	
-	# INDEX ID				
+				
 	$sIndexColumn = "a.id";
    
 	
-	# START TIME & END TIME 
 	$start_date_field = "a.create_time";
 	$end_date_field	  = "a.create_time";
 
-	# FROM QUERY
 	$sFromTable = "FROM cc_ts_penawaran a, 
 	cc_ts_penawaran_campaign b WHERE b.id=a.campaign_id ";
 
-	# VIEW TRACE
-	  // 0 = Disable     1 = Enable
-	  // If you enable this Trace, so your data may be broke, but you can trace it in network data :D :P 
 	  $viewTrace = 0;
 
-
-####################################  E N D   O F  C O N F I G U R A T I O N   F I L E #  ########################
-/*
-$v_agentid      = get_param("v_agentid");
-$v_agentlevel   = get_param("v_agentlevel");
-*/
 $v_agentid      = get_session("v_agentid");
 $v_agentlevel   = get_session("v_agentlevel");
 
@@ -88,31 +60,31 @@ $spv_id     = get_param("spv_id");
 $agent_id   = get_param("agent_id");
 $last_phonecall = get_param("last_phonecall");
 
-if($bucket_id != ''){
+if($bucket_id !== ''){
     $sFromTable .= " AND a.campaign_id='$bucket_id' ";
 }
 
-if($spv_id != ''){
+if($spv_id !== ''){
     $sFromTable .= " AND a.spv_id='".$spv_id."' ";
 }
 
-if($agent_id!=''){
+if($agent_id!==''){
     $sFromTable .= " AND a.assign_to='$agent_id' ";
 }
 
-if ($spv_id=='') {
-	if($v_agentlevel==2){
+if ($spv_id==='') {
+	if($v_agentlevel===2){
         $sFromTable .=  "AND a.spv_id = '".$v_agentid."' ";
     }
 }
 
-if ($agent_id=='') {
-	if($v_agentlevel==1){
+if ($agent_id==='') {
+	if($v_agentlevel===1){
         $sFromTable .=  "AND a.assign_to = '".$v_agentid."' ";
     }
 }
 
-if($last_phonecall!=''){
+if($last_phonecall!==''){
     $sFromTable .= " AND a.call_status='$last_phonecall' "; 
 }
 
@@ -124,28 +96,28 @@ if($last_phonecall!=''){
                     a.`status`=1
                 ORDER BY a.id DESC ";
         $res = mysqli_query($condb,$sql);
-        while($rec = mysqli_fetch_array($res)) {
+        while($rec = mysqli_fetch_object($res)) {
             $arr_agentid[$rec["id"]] = $rec["agent_name"]; 
         }
         mysqli_free_result($res);
 
         $sql = "SELECT id, call_status FROM cc_ts_call_status";
         $res = mysqli_query($condb,$sql);
-        while($rec = mysqli_fetch_array($res)) {
+        while($rec = mysqli_fetch_object($res)) {
              $arr_callstatus[$rec["id"]] = $rec["call_status"]; 
         }
         mysqli_free_result($res);
  
         $sql = "SELECT id, call_status_sub1 FROM cc_ts_call_status_sub1";
         $res = mysqli_query($condb,$sql);
-        while($rec = mysqli_fetch_array($res)) {
+        while($rec = mysqli_fetch_object($res)) {
              $arr_callstatussub[$rec["id"]] = $rec["call_status_sub1"]; 
         }
         mysqli_free_result($res);
 
 
 	$sGroup = "";
-	if ($privgroup != "") {
+	if ($privgroup !== "") {
 		$sGroup = " $privgroup ";
 	}
 
@@ -154,8 +126,8 @@ if($last_phonecall!=''){
 		
 		$cob_search = $cmb_search[$i];
 		$txt_search = $cmb_key[$i];
-		if($cob_search!='' && $txt_search!=''){
-			if($wherewile != ''){
+		if($cob_search!=='' && $txt_search!==''){
+			if($wherewile !== ''){
 			$wherewile .= " AND ";	
 			}	
 			$wherewile .= " $cob_search like '%$txt_search%' ";	
@@ -164,9 +136,9 @@ if($last_phonecall!=''){
 	}
 	
 	$sDate = "";
-	if($s_time=='1'){ //jika enable
+	if($s_time==='1'){ 
 		 
-		 if($date_period!=''){
+		 if($date_period!==''){
 		 	$start_date 	= trim(substr($date_period,0,10));
 			$end_date 		= trim(substr($date_period,12));
 			
@@ -181,44 +153,44 @@ if($last_phonecall!=''){
 	 }
 
 	 $sStatus = "";
-	if($s_status=='1'){ //jika enable
-		 if($val_status != '' && $val_status == '0'){
+	if($s_status==='1'){ 
+		 if($val_status !== '' && $val_status === '0'){
 		 	$sStatus = " AND c.ticket_status = '".$val_status."' ";
 		 }
 	 }
 
 	$sLimit = "";
-	if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+	if ( isset( $xxx = filter_input(INPUT_GET, 'iDisplayStart'] ) && $xxx = filter_input(INPUT_GET, 'iDisplayLength'] !== '-1' )
 	{
-		$sLimit = "LIMIT ".inj3($condb, $_GET['iDisplayStart'] ).", ".
-		inj3($condb, $_GET['iDisplayLength'] );
+		$sLimit = "LIMIT ".inj3($condb, $xxx = filter_input(INPUT_GET, 'iDisplayStart'] ).", ".
+		inj3($condb, $xxx = filter_input(INPUT_GET, 'iDisplayLength'] );
 	}
 	
 	
-	if ( isset( $_GET['iSortCol_0'] ) )
+	if ( isset( $xxx = filter_input(INPUT_GET, 'iSortCol_0'] ) )
 	{
 		$sOrder = "ORDER BY  ";
 		
-		if($_GET['iSortCol_0']==0){
+		if($xxx = filter_input(INPUT_GET, 'iSortCol_0']===0){
 
 			$sOrder .= " $sIndexColumn DESC";
 
 		}else{
 			
 		
-			for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+			for ( $i=0 ; $i<intval( $xxx = filter_input(INPUT_GET, 'iSortingCols'] ) ; $i++ )
 			{
-				if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
+				if ( $_GET[ 'bSortable_'.intval($xxx = filter_input(INPUT_GET, 'iSortCol_'.$i]) ] === "true" )
 				{
-					$sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
-						".inj3($condb, $_GET['sSortDir_'.$i] ) .", ";
+					$sOrder .= $aColumns[ intval( $xxx = filter_input(INPUT_GET, 'iSortCol_'.$i] ) ]."
+						".inj3($condb, $xxx = filter_input(INPUT_GET, 'sSortDir_'.$i] ) .", ";
 				}
 			}
 			
 			$sOrder = substr_replace( $sOrder, "", -2 );
 		}
 		
-			if ( $sOrder == "ORDER BY" )
+			if ( $sOrder === "ORDER BY" )
 			{
 				$sOrder = "";
 			}
@@ -232,9 +204,9 @@ if($last_phonecall!=''){
 	$sWhere .= "  ";
 	for ( $i=0 ; $i<count($aColumns) ; $i++ )
 	{
-		if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
+		if ( $xxx = filter_input(INPUT_GET, 'bSearchable_'.$i] === "true" && $xxx = filter_input(INPUT_GET, 'sSearch_'.$i] !== '' )
 		{
-			if ( $sWhere == "" )
+			if ( $sWhere === "" )
 			{
 				$sWhere = "AND ";
 			}
@@ -242,22 +214,10 @@ if($last_phonecall!=''){
 			{
 				$sWhere .= " AND ";
 			}
-			$sWhere .= $aColumns[$i]." LIKE '%".inj3($condb, $_GET['sSearch_'.$i])."%' ";
+			$sWhere .= $aColumns[$i]." LIKE '%".inj3($condb, $xxx = filter_input(INPUT_GET, 'sSearch_'.$i])."%' ";
 		}
 	}
 	
-    // $sGroup = " GROUP BY MONTH(a.create_time), a.region, a.spv_id, a.bucket_id ";
-	// $sOrder = " ORDER BY a.insert_time ASC ";
-	
-	// $sOrder = "  ORDER BY ISNULL(a.call_status) ASC, a.call_status=0, a.call_status  ASC,
- //                 CASE
- //                     WHEN a.call_status>0 THEN a.modif_time
- //                 END DESC ";
-	
-	// $sOrder = "  ORDER BY ISNULL(a.call_status) ASC, a.call_status=0,
- //                 CASE
- //                     WHEN a.call_status>0 THEN a.modif_time
- //                 END DESC ";
 	
 	$sOrder = "  ORDER BY ISNULL(a.call_status) ASC, a.call_status=0,
                  IF(a.call_status>0, a.modif_time,'') DESC, modif_time ASC";
@@ -272,8 +232,8 @@ if($last_phonecall!=''){
 		$sGroup
 		$sOrder
 		$sLimit
-	"; //echo $sQuery;
-	if($viewTrace == 1){
+	"; 
+	if($viewTrace === 1){
 		echo $sQuery;
 	}
 
@@ -283,7 +243,7 @@ if($last_phonecall!=''){
 		SELECT FOUND_ROWS()
 	";
 	$rResultFilterTotal = mysqli_query($condb,$sQuery);
-	$aResultFilterTotal = mysqli_fetch_array($rResultFilterTotal);
+	$aResultFilterTotal = mysqli_fetch_object($rResultFilterTotal);
 	$iFilteredTotal = $aResultFilterTotal[0];
 	
 	$sQuery = "
@@ -291,53 +251,46 @@ if($last_phonecall!=''){
 		$sFromTable
 	";
 	$rResultTotal = mysqli_query($condb,$sQuery);
-	$aResultTotal = mysqli_fetch_array($rResultTotal);
+	$aResultTotal = mysqli_fetch_object($rResultTotal);
 	$iTotal = $aResultTotal[0];
 	
 	
 	
 	$output = array(
-		"sEcho" => intval($_GET['sEcho']),
+		"sEcho" => intval($xxx = filter_input(INPUT_GET, 'sEcho']),
 		"iTotalRecords" => $iTotal,
 		"iTotalDisplayRecords" => $iFilteredTotal,
 		"aaData" => array()
 	);
 	
-	while ( $aRow = mysqli_fetch_array( $rResult ) )
+	while (( $aRow = mysqli_fetch_object( $rResult )) === TRUE) 
 	{
 		$row = array();
 		
 		for ( $i=0 ; $i<count($aColumns) ; $i++ )
 		{
-			if ( $aColumns[$i] == "version" )
+			if ( $aColumns[$i] === "version" )
 			{
-				//$row[] = ($aRow[ $aColumns[$i] ]=="0") ? '-' : $aRow[ $aColumns[$i] ];
-				$row[] = ($aRow[$i]=="0") ? '-' : $aRow[$i];
+				$row[] = ($aRow[$i]==="0") ? '-' : $aRow[$i];
 			}
-			else if ( $aColumns[$i] != ' ' )
+			else if ( $aColumns[$i] !== ' ' )
 			{   
-                if($i == 0) {
+                if($i === 0) {
                     $row[] = "<i onclick=\"frefID('$aRow[$i]')\" class='fas fa-database' data-toggle=\"modal\" data-backdrop=\"false\" data-target=\"#modal_history\" />";
-                } else if($i == 5) {
+                } else if($i === 5) {
 					$row[] = $arr_agentid[$aRow[$i]];
-				} else if($i == 6) {
+				} else if($i === 6) {
 					$row[] = $arr_agentid[$aRow[$i]];
-				} else if($i == 8) {
-					if($aRow[$i] == "0"){
+				} else if($i === 8) {
+					if($aRow[$i] === "0"){
 						$row[] = "New";
 					} else {
 						$row[] = $arr_callstatus[$aRow[$i]];
 					}
-                    // $row[] = htmlspecialchars($aRow[$i],ENT_QUOTES);
-                    // $url = base64_encode($aRow[0]);
-                    // $row[] = '<button class="btn btn-sm btn-success" onClick="downloadexcel(\''.$url.'\');"> 
-                    // <i class="fas fa-file-export">&nbsp;&nbsp;XLS</i></button>';
-                } else if($i == 9) {
+                } else if($i === 9) {
 					$row[] = $arr_callstatussub[$aRow[$i]];
-					// $row[] = $arr_callstatus[$aRow[$i]];
-				} else if($i == 10) {
+				} else if($i === 10) {
 					$row[] = $arr_agentid[$aRow[$i]];
-					// $row[] = $arr_callstatus[$aRow[$i]];
 				} else {
                     $row[] = htmlspecialchars($aRow[$i],ENT_QUOTES);
                 }

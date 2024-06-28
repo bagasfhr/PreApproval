@@ -1,7 +1,16 @@
 <?php
-include "../../sysconf/global_func.php";
-include "../../sysconf/session.php";
-include "../../sysconf/db_config.php";
+$path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "session.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
 
 $condb = connectDB();
 
@@ -107,7 +116,6 @@ $mlob                       = inj3($condb,get_param("mlob"));
 $param_agrmnt               = inj3($condb,get_param("param_agrmnt"));
 $three_pro_offering         = inj3($condb,get_param("three_pro_offering"));
 
-// simulasi
 $three_or_office            = inj3($condb,get_param("three_or_office"));
 $three_asset_name           = inj3($condb,get_param("three_asset_name"));
 $three_mfr_year             = inj3($condb,get_param("three_mfr_year"));
@@ -128,27 +136,22 @@ $three_calcu_budget         = inj3($condb,get_param("three_calcu_budget"));
 $three_budget_plan          = inj3($condb,get_param("three_budget_plan"));
 $three_calcu_install        = inj3($condb,get_param("three_calcu_install"));
 $param_num_duplicate        = inj3($condb,get_param("param_num_duplicate"));
-//start_new
+
 $txt_activity_pasangan_ducapil       = inj3($condb,get_param("txt_activity_pasangan_ducapil"));
 $txt_activity_pasangan_neglist       = inj3($condb,get_param("txt_activity_pasangan_neglist"));
 $txt_activity_guarantor_ducapil      = inj3($condb,get_param("txt_activity_guarantor_ducapil"));
 $txt_activity_guarantor_neglist      = inj3($condb,get_param("txt_activity_guarantor_neglist"));
 $opsi_penanganan                     = inj3($condb,get_param("opsi_penanganan"));
 $txt_IS_PRE_APPROVAL                 = inj3($condb,get_param("txt_IS_PRE_APPROVAL"));
-//end new
+
 
 $three_ltv_maks = str_replace(",", ".", $three_ltv_maks);
 $three_ltv_yang = str_replace(",", ".", $three_ltv_yang);
-// if (strpos($three_ltv_maks, ".")== false) {
-//     $three_ltv_maks = $three_ltv_maks.".00";
-// }
-// if (strpos($three_ltv_yang, ".")== false) {
-//     $three_ltv_yang = $three_ltv_yang.".00";
-// }
+
 $updwaktu = "";
-if ($txt_activity_result==1) {
+if ($txt_activity_result===1) {
     $updwaktu = " waktu_survey        = '$txt_activity_waktuvisit', ";
-}else if ($txt_activity_result==2) {
+}else if ($txt_activity_result===2) {
     $updwaktu = " visit_dt        = '$txt_activity_waktuvisit', ";
 }
 
@@ -157,7 +160,6 @@ if ($txt_activity_result==1) {
 $sqldel = "DELETE FROM cc_ts_penawaran_temp WHERE (customer_id='$txt_customer_no' OR customer_id_ro='$txt_customer_no') AND call_status=0;";
 $rec_i = mysqli_query($condb,$sqldel);
 
-// $sqlinserttemp = "INSERT cc_ts_penawaran_temp SELECT * FROM cc_ts_penawaran WHERE (customer_id='$txt_customer_no' OR customer_id_ro='$txt_customer_no');";//echo "string $sqlinserttemp </br></br>";
 
 $sqlinserttemp = "INSERT cc_ts_penawaran_temp SELECT a.* FROM cc_ts_penawaran a LEFT JOIN cc_ts_penawaran_temp b
                   ON a.id=b.id WHERE (a.customer_id='$txt_customer_no' OR a.customer_id_ro='$txt_customer_no') AND (b.call_status IS NULL OR b.call_status=0);";
@@ -170,18 +172,18 @@ $sqlsa = "SELECT
           WHERE 
             a.id='$three_asset_name'";
 $ressa = mysqli_query($condb,$sqlsa);
-if($recsa = mysqli_fetch_array($ressa)){
+if($recsa = mysqli_fetch_object($ressa)){
     $asset_code       = $recsa['asset_code'];
 }
 $sqlsa = "SELECT a.id, a.office_code, a.office_name FROM cc_master_cabang a 
           WHERE 
             a.id='$three_or_office'";
 $ressa = mysqli_query($condb,$sqlsa);
-if($recsa = mysqli_fetch_array($ressa)){
+if($recsa = mysqli_fetch_object($ressa)){
     $cabang_code       = $recsa['office_code'];
 }
 
-    //simulasi
+
     $sqlsimulasi = "INSERT INTO cc_ts_simulasi SET    
                  id_cust_detail     = '$iddet',
                  id_task            = '$txt_task_id',
@@ -214,19 +216,19 @@ if($recsa = mysqli_fetch_array($ressa)){
                  modif_time         = now()";
     mysqli_query($condb,$sqlsimulasi);
 
-//update job
+
     $sqlupall = "UPDATE cc_ts_penawaran_job SET    
                     is_assign         = '0'
              WHERE AGRMNT_NO = '$agrmnt_no'";
     mysqli_query($condb,$sqlupall);
 
 
-if ($txt_activity_result=='5'||$txt_activity_result=='6') {
+if ($txt_activity_result==='5'||$txt_activity_result==='6') {
     $sql_whr = " id IN ($param_agrmnt) ";
-    if ($txt_customer_no !='') {
+    if ($txt_customer_no !=='') {
         $sql_whr = " (customer_id='$txt_customer_no' OR customer_id_ro='$txt_customer_no')";
     }
-    //update
+
     $sqlupall = "UPDATE cc_ts_penawaran_temp SET    
                     visit_notes         = '$txt_other_visitnote',
                     last_phoneno        = '$dialedno',
@@ -263,7 +265,7 @@ if ($txt_activity_result=='5'||$txt_activity_result=='6') {
     mysqli_query($condb,$sqlupall);
 }
 
-//update customer_id         = '$txt_customer_no',
+
 $sqlup = "UPDATE cc_ts_penawaran_temp SET
                 customer_name       = '$txt_customer_name',         
                 asset_usage         = '$three_asset_usage',      
@@ -366,13 +368,13 @@ $sqlup = "UPDATE cc_ts_penawaran_temp SET
                 asset_code          = '$asset_code',
                 cabang_code         = '$cabang_code',
                 three_ins_type      = '$three_ins_type'
-         WHERE id='$iddet' ";//echo "string $sqlup";
+         WHERE id='$iddet' ";
 mysqli_query($condb,$sqlup);
 
-if($txt_activity_result=='4'){
+if($txt_activity_result==='4'){
     $sqla = "SELECT a.agent_id, a.agent_name FROM cc_agent_profile a WHERE a.id='$v_agentid'";
     $resa = mysqli_query($condb,$sqla);
-    if($reca = mysqli_fetch_array($resa)){
+    if($reca = mysqli_fetch_object($resa)){
         $agent_id   = $reca['agent_id'];
         $agent_name = $reca['agent_name'];
     }
@@ -409,16 +411,12 @@ $sql = "INSERT INTO cc_ts_penawaran_call_session SET
                 sub_result          ='$txt_activity_substatuscall',
                 remark              ='$txt_activity_notes',
                 insert_time         =now(), ";
-// $sql .= $sqlclose;
+
 $sql .= "modified_by            ='$v_agentid',
-         modify_time            =now()"; //echo $sql;
-//call status dan response status sama 
+         modify_time            =now()"; 
 mysqli_query($condb,$sql);
 
-/*
- $sqlall = "INSERT INTO cc_ts_penawaran_history (`form_id`, `id_add_asset`, `id_penawaran`, `polo_order_in_id`, `distributed_date`, `source_data`, `region_code`, `region_name`, `office`, `cabang_code`, `cabang_name`, `cabang_coll`, `cabang_coll_name`, `kapos_name`, `agrmnt_no`, `order_no`, `order_no_rating`, `product`, `product_cat`, `product_offering_code`, `order_no_ro`, `customer_id`, `customer_name`, `nik_ktp`, `religion`, `tempat_lahir`, `tanggal_lahir`, `nama_pasangan`, `tanggal_lahir_pasangan`, `child_name`, `child_birthdate`, `legal_alamat`, `legal_rt`, `legal_rw`, `legal_provinsi`, `legal_kabupaten`, `legal_city`, `legal_kecamatan`, `legal_kelurahan`, `legal_kodepos`, `legal_sub_kodepos`, `survey_alamat`, `survey_rt`, `survey_rw`, `survey_provinsi`, `survey_kabupaten`, `survey_city`, `survey_kecamatan`, `survey_kelurahan`, `survey_kodepos`, `survey_sub_kodepos`, `city_id`, `gender`, `mobile_1`, `mobile_2`, `phone_1`, `phone_2`, `office_phone_1`, `office_phone_2`, `profession_name`, `profession_cat_name`, `job_position`, `industry_type_name`, `monthly_income`, `monthly_instalment`, `lob`, `nama_ibu_kandung`, `education`, `marital_status`, `residance_status`, `dp`, `num_of_dependents`, `length_of_work`, `stay_length`, `status_ktp`, `plafond`, `cust_rating`, `suppl_name`, `suppl_code`, `pekerjaan`, `jenis_pekerjaan`, `detail_pekerjaan`, `oth_biz_name`, `hobby`, `kepemilikan_rumah`, `customer_id_ro`, `customer_rating`, `nama_dealer`, `kode_dealer`, `no_mesin`, `no_rangka`, `asset_type`, `asset_category`, `asset_desc`, `merk`, `asset_price_amount`, `item_id`, `item_type`, `item_desc`, `item_year`, `otr_price`, `kepemilikan_bpkb`, `agrmnt_rating`, `status_kontrak`, `angsuran_ke`, `sisa_tenor`, `tenor`, `release_date_bpkb`, `max_past_due_date`, `tanggal_jatuh_tempo`, `maturity_date`, `est_max_pembiayaan`, `os_principal`, `product_category`, `sisa_piutang`, `kilat_pintar`, `aging_pembiayaan`, `jumlah_kontrak_per_cust`, `estimasi_terima_bersih`, `cycling`, `task_id`, `jenis_task`, `soa`, `down_payment`, `ltv`, `call_stat`, `answer_call`, `prospect_stat`, `reason_not_prospect`, `confirmation`, `notes`, `sla_remaining`, `started_date`, `emp_position`, `application_id`, `application_ia`, `dukcapil_stat`, `field_person_name`, `negative_cust`, `notes_new_lead`, `visit_dt`, `input_dt`, `sub_sitrict_kat_code`, `contact_no`, `source_data_mss`, `referantor_code`, `referantor_name`, `supervisor_name`, `note_telesales`, `submited_dt`, `mss_stat`, `wise_stat`, `visit_stat`, `survey_stat`, `flag_void_sla`, `eligible_flag`, `eligible_flag_dt`, `dtm_crt`, `usr_crt`, `rtm_upd`, `usr_upd`, `app_no`, `application_stat`, `bpkb_out`, `brand`, `city_leg`, `city_res`, `cust_photo`, `dp_pct`, `f_card_photo`, `ia_app`, `id_photo`, `jenis_pembiayaan`, `monthly_expense`, `npwp_no`, `nomor_akta_pendirian`, `nomor_badan_usaha`, `tempat_pendirian`, `tanggal_akta_pendirian`, `order_id`, `other_biz_name`, `ownership`, `pos_dealer`, `promotion_activity`, `referantor_code_1`, `referantor_code_2`, `referantor_name_1`, `referantor_name_2`, `sales_dealer`, `send_flag_wise`, `spouse_id_photo`, `spouse_name`, `spouse_birth_date`, `spouse_birth_place`, `spouse_nik`, `spouse_phone`, `guarantor_name`, `guarantor_nik`, `guarantor_birth_date`, `guarantor_birth_place`, `guarantor_phone`, `guarantor_address`, `guarantor_rt`, `guarantor_rw`, `guarantor_kelurahan`, `guarantor_kecamatan`, `guarantor_kabupaten`, `guarantor_provinsi`, `guarantor_zipcode`, `guarantor_religion`, `guarantor_phone1`, `guarantor_phone2`, `customer_model`, `length_of_domicile`, `penghasilan`, `job_phone_1`, `job_phone_2`, `other_asset`, `alternative_phone_no`, `visit_notes`, `pipeline`, `pot`, `completion_data`, `contract_status`, `dukcapil_result`, `cek_dukcapil`, `waktu_survey`, `guarantor_relation`, `send_flag_mss`, `flag_pre_ia`, `task_id_mss`, `profession_code`, `sales_dealer_id`, `profession_category_code`, `flag_void_sla_tele`, `status_task_mss`, `priority_level`, `outstand_principal`, `outstand_monthly_instalment`, `rrd_date`, `group_id`, `sumber_order`, `special_cash_flag`, `created_by`, `modif_by`, `insert_time`, `modif_time`, `campaign_id`, `external_code`, `priority`, `branch_name`, `phone`, `product_type`, `vehicle_year`, `plafond_price`, `installment_price`, `referentor`, `desc_note`, `desc_note_adv`, `assign_by`, `assign_to`, `assign_time`, `reassign`, `reassign_by`, `reassign_time`, `first_call_time`, `first_followup_by`, `follow_up`, `remark_desc`, `last_phoneno`, `last_call_time`, `last_followup_by`, `last_followup_date`, `call_status`, `call_status_sub1`, `call_status_sub2`, `total_dial`, `total_phone`, `total_course`, `status`, `status_bypass`, `status_approve`, `close_time`, `close_by`, `close_approve_time`, `close_approve_by`, `qa_approve_status`, `qa_approve_note`, `qa_approve_time`, `qa_approve_by`, `flag_pushtopolo`, `flag_auto`, `api_flag`, `create_by`, `create_time`)
-                        SELECT '$form_id','$add_asset_id',a.*,'$v_agentid',NOW() FROM cc_ts_penawaran a
-                        WHERE a.id='$iddet' "; */
+
 $sqlall = "INSERT INTO cc_ts_penawaran_history (form_id,
             id_add_asset,
             id_penawaran,
@@ -834,13 +832,11 @@ $sqlall = "INSERT INTO cc_ts_penawaran_history (form_id,
             create_by,
             create_time)
                 SELECT '$form_id','$add_asset_id',a.*,'$v_agentid',NOW() FROM cc_ts_penawaran_temp a
-                        WHERE a.id='$iddet'"; //echo $sqlall;
+                        WHERE a.id='$iddet'"; 
 if($rec_u = mysqli_query($condb,$sqlall)) {
     echo "Success!";
     $sqldel = "DELETE FROM cc_ts_penawaran_temp_all WHERE (customer_id='$txt_customer_no' OR customer_id_ro='$txt_customer_no')";
     $rec_i = mysqli_query($condb,$sqldel);
-
-    // $sqlinserttemp = "INSERT cc_ts_penawaran_temp SELECT * FROM cc_ts_penawaran WHERE (customer_id='$txt_customer_no' OR customer_id_ro='$txt_customer_no');";//echo "string $sqlinserttemp </br></br>";
 
     $sqlinserttemp = "INSERT cc_ts_penawaran_temp_all SELECT a.* FROM cc_ts_penawaran_temp a LEFT JOIN cc_ts_penawaran_temp_all b
                       ON a.id=b.id WHERE (a.customer_id='$txt_customer_no' OR a.customer_id_ro='$txt_customer_no');";

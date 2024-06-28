@@ -1,8 +1,16 @@
 <?php
-include "../../sysconf/global_func.php";
-include "../../sysconf/session.php";
-include "../../sysconf/db_config.php";
-// include "global_func_ticket.php";
+$path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "session.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
 
 $condb = connectDB();
 $v_agentid      = get_session("v_agentid");
@@ -41,24 +49,20 @@ $status			= get_param("status");
 
 $arr_modul = array(
 		"1" => "Telesales Penawaran"
-		// "2" => "Telesales Konfirmasi"
-		// "3" => "Teleupload",
-		// "4" => "Telecollection",
 );
-if($iddet!=''){
+if($iddet!==''){
 	$sqlv = "SELECT * FROM cc_parameter_assign WHERE id='$iddet'";
 	$resv = mysqli_query($condb,$sqlv);
-	if($recv = mysqli_fetch_array($resv)){
+	if($recv = mysqli_fetch_object($resv)){
 		$modul					= $recv['modul'];
 		$max_limit_distribution	= $recv['max_limit_distribution'];
 		$status					= $recv['status'];
 	}
 }
 
-//file save data
 $save_form = "view/telesales/tele_param_assign_save.php";
 
-if($iddet  == "") {
+if($iddet  === "") {
 	$desc_iddet = "Create New";
 }else{
 	$desc_iddet = "View";
@@ -97,7 +101,7 @@ if($iddet  == "") {
 			<?php
 				$menu_tree = explode("|", $library['page']);
 				for ($i=0; $i <count($menu_tree) ; $i++) { 
-					if ($i != 0) {
+					if ($i !== 0) {
 						echo "<li class=\"separator\"><i class=\"fas fa-chevron-right\"></i></li>";
 					}
 					echo "<li class=\"nav-item\">".$menu_tree[$i]."</li>";;
@@ -110,7 +114,6 @@ if($iddet  == "") {
 	<div class="content" style="margin-top: 10px;">
 		<div class="row">
 		
-		<!-- table 1 start -->
 		<div class="col-md-12">
 			<div class="card">
 				<div style="margin:10px 10px 10px 10px;">
@@ -120,7 +123,7 @@ if($iddet  == "") {
 							<div class="form-body">		
 								<?php
 									$param_sla="Day";
-									if ($iddet==2) {
+									if ($iddet===2) {
 										$param_sla="Minute";
 									}
 									$txttitle	= $library['title'];
@@ -132,7 +135,7 @@ if($iddet  == "") {
 									$sel 			   = "<select id='modul' name='modul' class='form-control'>";
 									$sel 			   .= "<option disabled>Select Modul</option>";
 									foreach ($arr_modul as $key => $value) {
-										if($key == $modul){
+										if($key === $modul){
 											$sel 	   .= "<option value='".$key."' selected>$value</option>";
 										}else{
 											$sel 	   .= "<option value='".$key."'>$value</option>";
@@ -164,7 +167,6 @@ if($iddet  == "") {
 				</div>
 			</div>
 		</div>
-		<!-- table 1 end -->
 		
 		</div>
 		
@@ -184,51 +186,28 @@ if($iddet  == "") {
 disconnectDB($condb);
 ?>
 
-<!--   Core JS Files   -->
 	<script src="assets/js/core/jquery.3.2.1.min.js"></script>
 	<script src="assets/js/core/popper.min.js"></script>
 	<script src="assets/js/core/bootstrap.min.js"></script>
-	<!-- jQuery UI -->
 	<script src="assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 	<script src="assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-	
-	<!-- Sweet Alert -->
 	<script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-	<!-- Bootstrap Toggle -->
 	<script src="assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js"></script>
-	<!-- jQuery Scrollbar -->
 	<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-	<!-- Select2 -->
 	<script src="assets/js/plugin/select2/select2.full.min.js"></script>
-	<!-- jQuery Validation -->
 	<script src="assets/js/plugin/jquery.validate/jquery.validate.min.js"></script>
-	<!-- Bootstrap Tagsinput -->
 	<script src="assets/js/plugin/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
-	<!-- Atlantis JS -->
 	<script src="assets/js/atlantis.min.js"></script>
 	<script src="assets/js/setting.js"></script>
 	
 
-	<!--
-	<link rel="stylesheet" type="text/css" href="assets/css/pickers/daterange/daterangepicker.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/pickers/datetime/bootstrap-datetimepicker.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/pickers/pickadate/pickadate.css">
-    
-    <script src="assets/js/plugin/pickers/dateTime/moment-with-locales.min.js" type="text/javascript"></script>
-    <script src="assets/js/plugin/pickers/dateTime/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    <script src="assets/js/plugin/pickers/pickadate/picker.js" type="text/javascript"></script>
-    <script src="assets/js/plugin/pickers/pickadate/picker.date.js" type="text/javascript"></script>
-    <script src="assets/js/plugin/pickers/pickadate/picker.time.js" type="text/javascript"></script>
-    <script src="assets/js/plugin/pickers/pickadate/legacy.js" type="text/javascript"></script>
-    <script src="assets/js/plugin/pickers/daterange/daterangepicker.js" type="text/javascript"></script>
-    -->
     <script lang="javascript">
 	var form = $( "#frmDataDet" );
 	form.validate();
 
     $("#btnSaveForm").click(function(){ 
     	 var fvalid = form.valid();
-    	 if(fvalid==true){
+    	 if(fvalid===true){
 
     	swal({
 						title: 'Are you sure want to save?',
@@ -262,13 +241,13 @@ disconnectDB($condb);
 							    contentType: false,
 						        success: function(d) {
 						        	var warn = d;
-					            	if(warn=="Success!") {
+					            	if(warn==="Success!") {
 					            		var vtype = "success";
 					            	} else {
 										var vtype = "error";	
 					            	}
 						            swal({ title: "Save Data!", type: vtype,  text: warn,   timer: 1000,   showConfirmButton: false });
-						            if(warn=="Success") {
+						            if(warn==="Success") {
 						            	setTimeout(function(){history.back();}, 1500);
 						            } 
 						        }
@@ -303,7 +282,6 @@ disconnectDB($condb);
 							var alink= "<?php echo $ffolder;?>|<?php echo $fmenu_link_back;?>|<?php echo $fdescription;?>|<?php echo $fmenu_id;?>|<?php echo $ficon;?>|<?php echo $fiddet;?>|<?php echo $fblist;?>"
 							var link = "index.php?v="+encodeURI(btoa(alink));
 							window.location.href = link;
-							//window.history.back();
 						} else {
 							swal.close();
 						}
@@ -346,13 +324,13 @@ disconnectDB($condb);
 							    contentType: false,
 						        success: function(d) {
 						        	var warn = d;
-					            	if(warn=="Success") {
+					            	if(warn==="Success") {
 					            		var vtype = "success";
 					            	} else {
 										var vtype = "error";	
 					            	}
 						            swal({ title: "Save Data!", type: vtype,  text: warn,   timer: 1000,   showConfirmButton: false });
-						            if(warn=="Success") {
+						            if(warn==="Success") {
 						            	setTimeout(function(){history.back();}, 1500);
 						            } 
 						        }

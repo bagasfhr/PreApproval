@@ -1,8 +1,20 @@
 <?php 
- include "../../sysconf/global_func.php";
- include "../../sysconf/session.php";
- include "../../sysconf/db_config.php";
- include "global_func_cc.php";
+ $path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+ $path = "session.php";
+if (file_exists($path)) {
+        include $path;
+}
+ $path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
+ $path = "global_func_cc.php";
+if (file_exists($path)) {
+        include $path;
+}
  $condb = connectDB();
  
  $v_agentid      = get_session("v_agentid");
@@ -17,92 +29,12 @@
  $params ="?sess=".date('YmdHis');
 
  $getparams = get_param("params");
-    if($params != ''){
+    if($params !== ''){
         $params .= "&params=".$getparams;
     } else {
         $params .= "&params=";
     }
 
-//  $tregion = get_param("tregion");
-//  $tbranch = get_param("tbranch");
-//  $tcustname = get_param("tcustname");
-//  $tcustid = get_param("tcustid");
-//  $tcampaign = get_param("tcampaign");
-
-//  $ttype = get_param("ttype");
-//  $tsource = get_param("tsource");
-//  $tlastagent = get_param("tlastagent");
-//  $tlastcalled = get_param("tlastcalled");
-//  $tlaststatus = get_param("tlaststatus");
-//  $tlevel = get_param("tlevel");
-
-// $params ="?sess=".date('YmdHis');
-
-// if($tregion != ''){
-//     $params .= "&tregion=".$tregion;
-// } else {
-//     $params .= "&tregion=";
-// }
-
-// if($tbranch != ''){
-//     $params .= "&tbranch=".$tbranch;
-// } else {
-//     $params .= "&tbranch=";
-// }
-
-// if($tcustname != ''){
-//     $params .= "&tcustname=".$tcustname;
-// } else {
-//     $params .= "&tcustname=";
-// }
-
-// if($tcustid != ''){
-//     $params .= "&tcustid=".$tcustid;
-// } else {
-//     $params .= "&tcustid=";
-// }
-
-// if($tcampaign != ''){
-//     $params .= "&tcampaign=".$tcampaign;
-// } else {
-//     $params .= "&tcampaign=";
-// }
-
-// if($ttype != ''){
-//     $params .= "&ttype=".$ttype;
-// } else {
-//     $params .= "&ttype=";
-// }
-
-// if($tsource != ''){
-//     $params .= "&tsource=".$tsource;
-// } else {
-//     $params .= "&tsource=";
-// }
-
-// if($tlastagent != ''){
-//     $params .= "&tlastagent=".$tlastagent;
-// } else {
-//     $params .= "&tlastagent=";
-// }
-
-// if($tlastcalled != ''){
-//     $params .= "&tlastcalled=".$tlastcalled;
-// } else {
-//     $params .= "&tlastcalled=";
-// }
-
-// if($tlaststatus != ''){
-//     $params .= "&tlaststatus=".$tlaststatus;
-// } else {
-//     $params .= "&tlaststatus=";
-// }
-
-// if($tlevel != ''){
-//     $params .= "&tlevel=".$tlevel;
-// } else {
-//     $params .= "&tlevel=";
-// }
 ?>
  <style>
 .table td {
@@ -162,7 +94,6 @@
             </thead>
             <tbody></tbody>
         </table>
-        <!-- <button class="btn btn-success" onclick="downloadexcel();return false;">Download Excel</button> -->
 </div>
 
 <div class="modal fade bd-example-modal-lg " id="modal_history" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
@@ -172,7 +103,6 @@
             <h4 class="modal-title" id="myModalLabel4">History Call</h4>
             </div>
             <div class="modal-body" style="background:white">
-            <!-- add assets -->
             <div id="historydiv">&nbsp;</div>
             </div>
             <div class="modal-footer">
@@ -187,7 +117,6 @@ disconnectDB($condb);
 ?>
 <script src="assets/js/core/jquery.3.2.1.min.js"></script>
 <script src="assets/js/atlantis.min.js"></script>
-<!-- <script src="assets/js/plugin/datatables/datatables.min.js"></script> -->
     
 <script type="text/javascript" src="assets/report/vendors/js/ui/jquery.sticky.js"></script>
 <script src="assets/report/vendors/js/tables/jquery.dataTables.min.js" type="text/javascript"></script>
@@ -204,7 +133,6 @@ disconnectDB($condb);
 <script>
     $('.dt-buttons').css('text-align', 'right');
     $('.dt-buttons').addClass('text-right');
-// $(document).ready(function() {
     var table = $('#datatablelist').DataTable({
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, 100]],
         "info": false,
@@ -212,11 +140,6 @@ disconnectDB($condb);
         "bProcessing": true,
         "bServerSide": true,
         "ordering": false,
-        // "aoColumnDefs" : [
-        // { "bVisible": false, "aTargets": [1] },
-        //   { "targets":[0,1], "className": "desktop" },
-        //   { "targets":[1], "className": "tablet, mobile" },
-        // { "orderable": false, "targets": [0] }],
     "sAjaxSource": "view/telesales/tele_task_inquiry_data.php<?=$params;?>",
     "fnServerParams": function (aoData) {
         aoData.push(
@@ -225,55 +148,9 @@ disconnectDB($condb);
     },
     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
         var oSettings = $('#datatablelist').dataTable().fnSettings();
-        //document.getElementById('lastPage').value = (oSettings._iDisplayStart/oSettings._iDisplayLength);
     },
-    // dom: 'Bfrtip',
-    // dom: 'Btip',
-    // buttons: [
-    //     {
-    //         extend: 'excel',
-    //         text: '<span class="fa fa-file-excel-o"></span> &nbsp;Excel Export',
-    //         action: function (e, dt, node, config)
-    //         {
-    //             downloadexcel();//window.location.href = './ServerSide.php?ExportToCSV=Yes';
-    //         }
-    //     }
-    // ] 
 });
-     
-// } );
-// var oTable = $('#datatablelist').dataTable({
-//     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-//      dom: 'Bfrtip<"top"><"bottom"l><"clear">',
-//      buttons: [
-//         {
-//             extend: 'collection',
-//             text: 'Action',
-//             className: 'my-1'
-//         }],
-//         "info": false,
-//         "searching": false,
-//      "bProcessing": true,
-//      "bServerSide": true,
-//         "ordering": false,
-//         // "aoColumnDefs" : [
-//         // { "bVisible": false, "aTargets": [1] },
-//         //   { "targets":[0,1], "className": "desktop" },
-//         //   { "targets":[1], "className": "tablet, mobile" },
-//         // { "orderable": false, "targets": [0] }],
-//      "sAjaxSource": "view/teleupload/teleupl_monitoring_data.php<?=$params;?>",
-//      "fnServerParams": function (aoData) {
-//                 aoData.push(
-//                     { "name": "status", "value": $("#status").val() }
-//                 );
-//             },
-//         "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-//             var oSettings = $('#datatablelist').dataTable().fnSettings();
-//             //document.getElementById('lastPage').value = (oSettings._iDisplayStart/oSettings._iDisplayLength);
-//         }
-            
-// });
-
+  
     function downloadexcel(){
         var cmbbucket       = document.getElementById("cmbbucket").value;
         var cmbspvid        = document.getElementById("cmbspvid").value;
@@ -284,8 +161,6 @@ disconnectDB($condb);
     }
 
      function frefID(kode){
-        // alert(kode);
-        // $('#historydiv').load('view/teleupload/get_history.php?iddata='+kode);
         $('#historydiv').load('view/telesales/get_history.php?type=penawaran&iddata='+kode);
         return false;
     }

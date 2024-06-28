@@ -1,8 +1,16 @@
 <?php 
- include "../../sysconf/global_func.php";
- include "../../sysconf/session.php";
- include "../../sysconf/db_config.php";
- // include "global_func_cc.php";
+ $path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+ $path = "session.php";
+if (file_exists($path)) {
+        include $path;
+}
+ $path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
  $condb = connectDB();
  
  $v_agentid      = get_session("v_agentid");
@@ -25,43 +33,42 @@
  $fltc ="";
  
 $params ="?sess=".date('YmdHis');
-if($cmbbucket != ''){
+if($cmbbucket !== ''){
     $fltb = " AND a.campaign_id='$cmbbucket' ";
     $params .= "&bucket_id=".$cmbbucket;
 } else {
     $params .= "&bucket_id=";
 }
 
-if($cmbspvid!=''){
+if($cmbspvid!==''){
     $agent_id = 0;
-    $sql = "SELECT a.agent_id FROM cc_group_leader a WHERE a.group_id = '".$cmbspvid."'"; //echo $sqlps;
+    $sql = "SELECT a.agent_id FROM cc_group_leader a WHERE a.group_id = '".$cmbspvid."'"; 
     $res = mysqli_query($condb, $sql);
-    while($rec = mysqli_fetch_array($res)){
+    while($rec = mysqli_fetch_object($res)){
         $agent_id = $rec['agent_id'];
     }
     $flts = " AND a.spv_id='".$agent_id."' ";
     $params .= "&spv_id=".$agent_id;
 
 } else {
-    // $params .= "&spv_id=";
-    if($v_agentlevel==2){
+    if($v_agentlevel===2){
         $flts = " AND a.spv_id='".$v_agentid."' ";
         $params .= "&spv_id=".$v_agentid;
-    }else if($v_agentlevel==1){
+    }else if($v_agentlevel===1){
         $flts = " AND a.agent_id='".$v_agentid."' ";
         $params .= "&agent_id=".$v_agentid;
     }
     
 }
 
-if($cmbagentid!=''){
+if($cmbagentid!==''){
     $flta = " AND a.agent_id='$cmbagentid' ";
     $params .= "&agent_id=".$cmbagentid;
 } else {
     $params .= "&agent_id=";
 }
 
-if($cmbcallstatus!=''){
+if($cmbcallstatus!==''){
     $fltc = " AND a.call_status='$cmbcallstatus' "; 
     $params .= "&last_phonecall=".$cmbcallstatus;
 } else {
@@ -84,22 +91,22 @@ if($cmbcallstatus!=''){
                 cc_ts_penawaran_campaign b
            WHERE 
                 b.id=a.campaign_id $fltb $flts $flta $fltc
-           GROUP BY c.id"; //echo $sqlps;
+           GROUP BY c.id";
  $resps = mysqli_query($condb,$sqlps);
- while($recps = mysqli_fetch_array($resps)){
+ while($recps = mysqli_fetch_object($resps)){
      $call_status      = $recps['last_phonecall'];
      $call_jum         = $recps['jusm'];
-     if($call_status==1){
+     if($call_status===1){
         $call_prospect = $call_jum;
-     }else if($call_status==2){
+     }else if($call_status===2){
         $call_interest = $call_jum;
-     }else if($call_status==3){
+     }else if($call_status===3){
         $call_notinterest = $call_jum;
-     }else if($call_status==4){
+     }else if($call_status===4){
         $call_followup = $call_jum;
-     }else if($call_status==5){
+     }else if($call_status===5){
         $call_uncontacted = $call_jum;
-     }else if($call_status==6){
+     }else if($call_status===6){
         $call_unconnected = $call_jum;
      }else{
          $call_new  = $call_jum;
@@ -233,17 +240,16 @@ if($cmbcallstatus!=''){
             </thead>
             <tbody></tbody>
         </table>
-        <!-- <button class="btn btn-success" onclick="downloadexcel();return false;">Download Excel</button> -->
 </div>
 
 <div class="modal fade bd-example-modal-lg " id="modal_history" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
-    <div class="modal-dialog modal-lg" role="document" style="border: 2px solid black;border-radius:10px 10px 0px 0px; "> <!-- <?php echo $master_borderdominant_color ?> -->
+    <div class="modal-dialog modal-lg" role="document" style="border: 2px solid black;border-radius:10px 10px 0px 0px; "> 
         <div class="modal-content" class="border border-primary">
-            <div class="modal-header" style="background:black;color:white"> <!-- <?php echo $dominant_mastercolor ?> -->
+            <div class="modal-header" style="background:black;color:white"> 
             <h4 class="modal-title" id="myModalLabel4">History Call</h4>
             </div>
             <div class="modal-body" style="background:white">
-            <!-- add assets -->
+            
             <div id="historydiv">&nbsp;</div>
             </div>
             <div class="modal-footer">
@@ -258,7 +264,6 @@ disconnectDB($condb);
 ?>
 <script src="assets/js/core/jquery.3.2.1.min.js"></script>
 <script src="assets/js/atlantis.min.js"></script>
-<!-- <script src="assets/js/plugin/datatables/datatables.min.js"></script> -->
     
 <script type="text/javascript" src="assets/report/vendors/js/ui/jquery.sticky.js"></script>
 <script src="assets/report/vendors/js/tables/jquery.dataTables.min.js" type="text/javascript"></script>
@@ -275,7 +280,6 @@ disconnectDB($condb);
 <script>
     $('.dt-buttons').css('text-align', 'right');
     $('.dt-buttons').addClass('text-right');
-// $(document).ready(function() {
     var table = $('#datatablelist').DataTable({
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, 100]],
         "info": false,
@@ -283,11 +287,6 @@ disconnectDB($condb);
     	"bProcessing": true,
 		"bServerSide": true,
         "ordering": false,
-        // "aoColumnDefs" : [
-        // { "bVisible": false, "aTargets": [1] },
-        //   { "targets":[0,1], "className": "desktop" },
-        //   { "targets":[1], "className": "tablet, mobile" },
-        // { "orderable": false, "targets": [0] }],
     "sAjaxSource": "view/telesales/tele_monitoring_data.php<?=$params;?>",
     "fnServerParams": function (aoData) {
         aoData.push(
@@ -296,9 +295,7 @@ disconnectDB($condb);
     },
     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
         var oSettings = $('#datatablelist').dataTable().fnSettings();
-        //document.getElementById('lastPage').value = (oSettings._iDisplayStart/oSettings._iDisplayLength);
     },
-    // dom: 'Bfrtip',
     dom: 'Btip',
     buttons: [
         {
@@ -306,44 +303,11 @@ disconnectDB($condb);
             text: '<span class="fa fa-file-excel-o"></span> &nbsp;Excel Export',
             action: function (e, dt, node, config)
             {
-                downloadexcel();//window.location.href = './ServerSide.php?ExportToCSV=Yes';
+                downloadexcel();
             }
         }
     ] });
-     
-// } );
-// var oTable = $('#datatablelist').dataTable({
-//     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-//      dom: 'Bfrtip<"top"><"bottom"l><"clear">',
-//      buttons: [
-//         {
-//             extend: 'collection',
-//             text: 'Action',
-//             className: 'my-1'
-//         }],
-//         "info": false,
-//         "searching": false,
-//     	"bProcessing": true,
-// 		"bServerSide": true,
-//         "ordering": false,
-//         // "aoColumnDefs" : [
-//         // { "bVisible": false, "aTargets": [1] },
-//         //   { "targets":[0,1], "className": "desktop" },
-//         //   { "targets":[1], "className": "tablet, mobile" },
-//         // { "orderable": false, "targets": [0] }],
-// 		"sAjaxSource": "view/telesales/tele_monitoring_data.php<?=$params;?>",
-// 		"fnServerParams": function (aoData) {
-//                 aoData.push(
-//                     { "name": "status", "value": $("#status").val() }
-//                 );
-//             },
-//         "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-//             var oSettings = $('#datatablelist').dataTable().fnSettings();
-//             //document.getElementById('lastPage').value = (oSettings._iDisplayStart/oSettings._iDisplayLength);
-//         }
-            
-// });
-
+   
     function downloadexcel(){
         var cmbbucket       = document.getElementById("cmbbucket").value;
         var cmbspvid        = document.getElementById("cmbspvid").value;
@@ -354,7 +318,6 @@ disconnectDB($condb);
     }
 
      function frefID(kode){
-        // alert(kode);
         $('#historydiv').load('view/telesales/get_history.php?type=penawaran&iddata='+kode);
         return false;
     }

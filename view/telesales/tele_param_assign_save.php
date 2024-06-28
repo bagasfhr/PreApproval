@@ -1,8 +1,20 @@
 <?php
-include "../../sysconf/global_func.php";
-include "../../sysconf/session.php";
-include "../../sysconf/db_config.php";
-include "../report/global_func_report.php";
+$path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "session.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "report/global_func_report.php";
+if (file_exists($path)) {
+        include $path;
+}
 
 $condb = connectDB();
 
@@ -14,8 +26,7 @@ $modul 						= get_param("modul");
 $max_limit_distribution 	= get_param("max_limit_distribution");
 $status 					= get_param("status");
 	
-if($iddet!=''){
-	//update
+if($iddet!==''){
 	 $sqlu = "UPDATE cc_parameter_assign SET
                 modul = '$modul', 
                 max_limit_distribution = '$max_limit_distribution', 
@@ -23,9 +34,9 @@ if($iddet!=''){
                 ";
     $sqlu .= "  modif_by = '$v_agentid',
                 modif_time 	= now()
-			WHERE id='$iddet'"; //echo $sqlu;
+			WHERE id='$iddet'"; 
 	if($rec_u = mysqli_query($condb,$sqlu)) {
-		//user trail log
+		
 		$traildesc = "Update $reason_log Success";
 		report_insert_trail_log($v_agentid,$traildesc,$condb);
 		
@@ -35,7 +46,7 @@ if($iddet!=''){
 	}
 		
 }else{
-	//insert
+	
 	$sqli = "INSERT INTO cc_parameter_assign SET
                 modul 					= '$modul', 
                 max_limit_distribution  = '$max_limit_distribution', 
@@ -44,7 +55,7 @@ if($iddet!=''){
     $sqli .= "  created_by 		= '$v_agentid',
                 insert_time 	= now()";
 	if($rec_i = mysqli_query($condb,$sqli)) {
-		//user trail log
+		
 		$traildesc = "Update $reason_log Success";
 		report_insert_trail_log($v_agentid,$traildesc,$condb);
 		
