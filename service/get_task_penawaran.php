@@ -1,11 +1,13 @@
 <?php 
 ini_set('post_max_size', '264M');
 ini_set('upload_max_filesize', '264M');
-// ini_set('memory_limit', '296M');
 ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 3000);
 
-include "../../sysconf/db_config.php";
+$path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
 
 $server = $server_staging;
 $username = $username_staging;  
@@ -14,7 +16,6 @@ $con = mssql_connect($server, $username, $password);
 mssql_select_db( $dbname_staging, $con );
 
 
-/* config mysql */ 
 $conf_ip            = $ip_conf;  
 $conf_user          = $user_conf;
 $conf_passwd        = $password_conf;
@@ -26,7 +27,6 @@ function connectDB() {
     if (!$connect=mysqli_connect($conf_ip, $conf_user, $conf_passwd, $conf_db)) {
       $filename = __FILE__;
       $linename = __LINE__;
-     // exit();
     }
     return $connect;
 }
@@ -38,7 +38,6 @@ function disconnectDB($db_connect) {
 
 
 if ($con) {
-    //echo "Koneksi Berhasil !";
 } else {
     echo "Koneksi gagal !";
     die(print_r(mssql_error(),true));
@@ -49,26 +48,15 @@ echo "<br>";
 echo "<br>";
 $dateexe = DATE("Y-m-d H:i:s");
 $dbopen  = connectDB();
-// $datenow = DATE("Y-m-d");
 
 
-//$sqlclear = "TRUNCATE cc_ts_consumer_detail";
-//$resclear = mysqli_query($dbopen,$sqlclear);
-    //top 100
     $no =1;
     $suc1=0;
     $err1=0;
-   // $mss_1 = "SELECT top 10 * FROM WISE_STAGING..T_COLL_TELECOLL_POPULATE_DATA";//echo "string $mss_1"; (NOLOCK)
-//    $mss_1 = "select top 2 * from WISE_STAGING..T_MKT_POLO_ELIGIBLE
-// where IS_ACTIVE='1'";
 
 $sqlflag = "UPDATE cc_ts_penawaran_job SET is_eligible_crm=0 WHERE SOURCE_DATA = 'WISE'";
 $resflag = mysqli_query($dbopen,$sqlflag);
 
-   // $mss_1 = "select A.* from WISE_STAGING..T_MKT_POLO_ELIGIBLE A
-   //           LEFT JOIN WISE_STAGING..T_MKT_POLO_ORDER_IN B ON A.AGRMNT_NO = B.AGRMNT_NO AND B.POLO_STEP='TASK MVS'
-   //           where A.IS_ACTIVE = '1'
-   //           AND B.AGRMNT_NO IS NULL";//AND A.ASSET_TYPE='MOBIL'
 $mss_1 = "select A.* FROM WISE_STAGING..T_MKT_POLO_ELIGIBLE A WITH(NOLOCK) 
              LEFT JOIN WISE_STAGING..T_MKT_POLO_ORDER_IN B WITH(NOLOCK) ON A.AGRMNT_NO = B.AGRMNT_NO AND B.POLO_STEP IN ('TASK MVS','TASK MSS', 'TASK MSS 2', 'TASK MSS AC',
              'TASK WISE')
@@ -76,10 +64,6 @@ $mss_1 = "select A.* FROM WISE_STAGING..T_MKT_POLO_ELIGIBLE A WITH(NOLOCK)
              AND B.AGRMNT_NO IS NULL";
     $rss_1 = mssql_query($mss_1);
     while($rcs_1 = mssql_fetch_array($rss_1)){
-
-       // echo $rcs_1['T_COLL_TELECOLL_POPULATE_DATA_ID']; echo "<br>";
-      // print_r($rcs_1);echo "<br><br>";
-       // print("<pre>".print_r($rcs_1,true)."</pre>");echo "<br><br>";
 
         $AGRMNT_ID = $rcs_1['AGRMNT_ID']; 
         $AGRMNT_NO = mysqli_real_escape_string($dbopen,$rcs_1['AGRMNT_NO']); 
@@ -650,7 +634,7 @@ $mss_1 = "select A.* FROM WISE_STAGING..T_MKT_POLO_ELIGIBLE A WITH(NOLOCK)
             $suc1++;
         }else{
             $err1++;
-            if ($err_agrmn1=="") {
+            if ($err_agrmn1==="") {
                 $err_agrmn1="$AGRMNT_NO";
                 $err_desc = mysqli_error($dbopen).";";
             }else{
@@ -663,9 +647,6 @@ $mss_1 = "select A.* FROM WISE_STAGING..T_MKT_POLO_ELIGIBLE A WITH(NOLOCK)
     }
 
 
-
-
-    //log 
     $err_desc = mysqli_real_escape_string($dbopen,$err_desc);
     $sqllog = "INSERT INTO cc_log_sync_data SET 
                   sync_desc       ='T_MKT_POLO_ELIGIBLE',
@@ -677,7 +658,6 @@ $mss_1 = "select A.* FROM WISE_STAGING..T_MKT_POLO_ELIGIBLE A WITH(NOLOCK)
                   sync_time       =now()";
     mysqli_query($dbopen,$sqllog);
 
-//campaign 
 $suc2=0;
 $err2=0;
 $puteran=0;
@@ -689,56 +669,56 @@ $sqlcg = "SELECT
           AND POSITION('WISE' IN a.data_source) > 0
           ORDER BY a.campaign_priority ASC ";
 $rescg = mysqli_query($dbopen,$sqlcg);
-while($reccg = mysqli_fetch_array($rescg)){
-    $idcc                               = $reccg['id'];//echo "string $idcc || $sqlcg";
-    $data_source                        = $reccg['data_source'];
-    $type_asset                       = $reccg['type_asset'];
-    $pipeline                         = $reccg['pipeline'];
-    $level                            = $reccg['level'];
-    $branch                           = $reccg['branch'];
-    $branch_code                           = $reccg['branch_code'];
-    $regional                         = $reccg['regional'];
-    $kendaraan                        = $reccg['kendaraan'];
-    $product                          = $reccg['product'];
-    $priority_sisa_tenor                             = $reccg['priority_sisa_tenor'];
-    $priority_sisa_tenor_from                             = $reccg['priority_sisa_tenor_from'];
-    $priority_sisa_tenor_to                             = $reccg['priority_sisa_tenor_to'];
-    $status_konsumen                             = $reccg['status_konsumen'];
-    $status_kontrak                             = $reccg['status_kontrak'];
-    $kepemilikan_rumah                             = $reccg['kepemilikan_rumah'];
-    $kepemilikan_bpkb                             = $reccg['kepemilikan_bpkb'];
-    $distribution_spv                             = $reccg['distribution_spv'];
-    $aging_pembiayaan                             = $reccg['aging_pembiayaan'];
-    $aging_pembiayaan_from                             = $reccg['aging_pembiayaan_from'];
-    $aging_pembiayaan_to                             = $reccg['aging_pembiayaan_to'];
-    $cust_age                             = $reccg['cust_age'];
-    $cust_age_from                             = $reccg['cust_age_from'];
-    $cust_age_to                             = $reccg['cust_age_to'];
-    $cust_birthday_month                             = $reccg['cust_birthday_month'];
-    $cust_birthday_month_from                             = $reccg['cust_birthday_month_from'];
-    $cust_birthday_month_to                             = $reccg['cust_birthday_month_to'];
-    $cust_rating                             = $reccg['cust_rating'];
-    $gender                             = $reccg['gender'];
-    $industry_type                             = $reccg['industry_type'];
-    $item_year                             = $reccg['item_year'];
-    $item_year_from                             = $reccg['item_year_from'];
-    $item_year_to                             = $reccg['item_year_to'];
-    $jenis_kendaraan                             = $reccg['jenis_kendaraan'];
-    $max_past_due                             = $reccg['max_past_due'];
-    $max_past_due_from                             = $reccg['max_past_due_from'];
-    $max_past_due_to                             = $reccg['max_past_due_to'];
-    $cust_monthly_income                             = $reccg['cust_monthly_income'];
-    $cust_monthly_income_from                             = $reccg['cust_monthly_income_from'];
-    $cust_monthly_income_to                             = $reccg['cust_monthly_income_to'];
-    $otr                             = $reccg['otr'];
-    $otr_from                             = $reccg['otr_from'];
-    $otr_to                             = $reccg['otr_to'];
-    $profession                             = $reccg['profession'];
-    $religion                             = $reccg['religion'];
-    $flag_potensi                             = $reccg['flag_potensi'];
+while($reccg = mysqli_fetch_object($rescg)){
+    $idcc                               = $reccg->id;
+    $data_source                        = $reccg->data_source;
+    $type_asset                       = $reccg->type_asset;
+    $pipeline                         = $reccg->pipeline;
+    $level                            = $reccg->level;
+    $branch                           = $reccg->branch;
+    $branch_code                           = $reccg->branch_code;
+    $regional                         = $reccg->regional;
+    $kendaraan                        = $reccg->kendaraan;
+    $product                          = $reccg->product;
+    $priority_sisa_tenor                             = $reccg->priority_sisa_tenor;
+    $priority_sisa_tenor_from                             = $reccg->priority_sisa_tenor_from;
+    $priority_sisa_tenor_to                             = $reccg->priority_sisa_tenor_to;
+    $status_konsumen                             = $reccg->status_konsumen;
+    $status_kontrak                             = $reccg->status_kontrak;
+    $kepemilikan_rumah                             = $reccg->kepemilikan_rumah;
+    $kepemilikan_bpkb                             = $reccg->kepemilikan_bpkb;
+    $distribution_spv                             = $reccg->distribution_spv;
+    $aging_pembiayaan                             = $reccg->aging_pembiayaan;
+    $aging_pembiayaan_from                             = $reccg->aging_pembiayaan_from;
+    $aging_pembiayaan_to                             = $reccg->aging_pembiayaan_to;
+    $cust_age                             = $reccg->cust_age;
+    $cust_age_from                             = $reccg->cust_age_from;
+    $cust_age_to                             = $reccg->cust_age_to;
+    $cust_birthday_month                             = $reccg->cust_birthday_month;
+    $cust_birthday_month_from                             = $reccg->cust_birthday_month_from;
+    $cust_birthday_month_to                             = $reccg->cust_birthday_month_to;
+    $cust_rating                             = $reccg->cust_rating;
+    $gender                             = $reccg->gender;
+    $industry_type                             = $reccg->industry_type;
+    $item_year                             = $reccg->item_year;
+    $item_year_from                             = $reccg->item_year_from;
+    $item_year_to                             = $reccg->item_year_to;
+    $jenis_kendaraan                             = $reccg->jenis_kendaraan;
+    $max_past_due                             = $reccg->max_past_due;
+    $max_past_due_from                             = $reccg->max_past_due_from;
+    $max_past_due_to                             = $reccg->max_past_due_to;
+    $cust_monthly_income                             = $reccg->cust_monthly_income;
+    $cust_monthly_income_from                             = $reccg->cust_monthly_income_from;
+    $cust_monthly_income_to                             = $reccg->cust_monthly_income_to;
+    $otr                             = $reccg->otr;
+    $otr_from                             = $reccg->otr_from;
+    $otr_to                             = $reccg->otr_to'];
+    $profession                             = $reccg->profession;
+    $religion                             = $reccg->religion;
+    $flag_potensi                             = $reccg->flag_potensi;
 
     $puteran++;
-    //log 
+    
     $sqllog = "INSERT INTO cc_log_service_get SET 
                   campaign_id       ='$idcc',
                   `desc`            ='puteran campaign',
@@ -746,54 +726,48 @@ while($reccg = mysqli_fetch_array($rescg)){
     mysqli_query($dbopen,$sqllog);
     
     $sql_whr="";
-    if ($data_source!="" && $data_source!="0") {
+    if ($data_source!=="" && $data_source!=="0") {
         $data_source = str_replace(",", "','", $data_source);
         $data_source = str_replace("(POTENSIAL DATA RO)", "", $data_source); 
         $sql_whr .=" AND SOURCE_DATA IN ('$data_source')";
     }
-    if ($type_asset!="" && $type_asset!="0") {
+    if ($type_asset!=="" && $type_asset!=="0") {
         $type_asset = str_replace(",", "','", $type_asset);
         $sql_whr .=" AND ASSET_TYPE IN ('$type_asset')";
     }
-    if ($pipeline!="" && $pipeline!="0") {
+    if ($pipeline!=="" && $pipeline!=="0") {
         $pipeline = str_replace(",", "','", $pipeline);
         $sql_whr .=" AND PIPELINE_ID IN ('$pipeline')";
     }
-    if ($level!="" && $level!="0") {
+    if ($level!=="" && $level!=="0") {
         $level = str_replace(",", "','", $level);
-        // $sql_whr .=" AND *** IN ('$level')";
     }
-    if ($branch_code!="" && $branch_code!="0") {
+    if ($branch_code!=="" && $branch_code!=="0") {
         $branch_code = str_replace(",", "','", $branch_code);
         $sql_whr .=" AND OFFICE_CODE IN ('$branch_code')";
     }
-    if ($regional!="" && $regional!="0") {
+    if ($regional!=="" && $regional!=="0") {
         $regional = str_replace(",", "','", $regional);
         $sql_whr .=" AND OFFICE_REGION_CODE IN ('$regional')";
     }
-    if ($kendaraan!="" && $kendaraan!="0") {
+    if ($kendaraan!=="" && $kendaraan!=="0") {
         $kendaraan = str_replace(",", "','", $kendaraan);
-        // $sql_whr .=" AND *** IN ('$kendaraan')";
     }
-    if ($product!="" && $product!="0") {
+    if ($product!=="" && $product!=="0") {
         $product = str_replace(",", "','", $product);
         $sql_whr .=" AND LOB_CODE IN ('$product')";
     }
-    if ($priority_sisa_tenor_from!="") {// && $priority_sisa_tenor_from!="0"
-        // $data_source = str_replace(",", "','", $data_source);
-        // $sql_whr .=" AND OS_TENOR >= '$priority_sisa_tenor_from'";
-        // $sql_whr .=" AND MATURITY_DURATION >= CAST('".$priority_sisa_tenor_from."' as DECIMAL(65))";
+    if ($priority_sisa_tenor_from!=="") {
         $sql_whr .=" AND OS_TENOR >= CAST('".$priority_sisa_tenor_from."' as DECIMAL(65))";
     }
-    if ($priority_sisa_tenor_to!="") {// && $priority_sisa_tenor_to!="0"
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($priority_sisa_tenor_to!=="") {
         $sql_whr .=" AND OS_TENOR <= CAST('".$priority_sisa_tenor_to."' as DECIMAL(65))";
     }
-    if ($status_kontrak!="" && $status_kontrak!="0") {
+    if ($status_kontrak!=="" && $status_kontrak!=="0") {
         $status_kontrak = str_replace(",", "','", $status_kontrak);
         $sql_whr .=" AND CONTRACT_STAT IN ('$status_kontrak')";
     }
-    if ($kepemilikan_rumah!="" && $kepemilikan_rumah!="0") {
+    if ($kepemilikan_rumah!=="" && $kepemilikan_rumah!=="0") {
         $kepemilikan_rumah = str_replace(",", "','", $kepemilikan_rumah);
         $sqlch = "SELECT 
           a.*
@@ -801,139 +775,111 @@ while($reccg = mysqli_fetch_array($rescg)){
           cc_master_house_ownership a 
           WHERE a.descr IN ('$kepemilikan_rumah')";
         $resch = mysqli_query($dbopen,$sqlch);
-        while($recch = mysqli_fetch_array($resch)){
-            $master_code = $recch['master_code'];
-            $descr = $recch['descr'];
+        while($recch = mysqli_fetch_object($resch)){
+            $master_code = $recch->master_code;
+            $descr = $recch->descr;
             $kepemilikan_rumah = str_replace("$descr", "$master_code", $kepemilikan_rumah);
         }
         $sql_whr .=" AND HOME_STAT IN ('$kepemilikan_rumah')";
     }
-    if ($kepemilikan_bpkb!="" && $kepemilikan_bpkb!="0") {
+    if ($kepemilikan_bpkb!=="" && $kepemilikan_bpkb!=="0") {
         $kepemilikan_bpkb = str_replace(",", "','", $kepemilikan_bpkb);
         $sql_whr .=" AND BPKB_OWNERSHIP IN ('$kepemilikan_bpkb')";
     }
-    if ($distribution_spv!="" && $distribution_spv!="0") {
+    if ($distribution_spv!=="" && $distribution_spv!=="0") {
         $distribution_spv = str_replace(",", "','", $distribution_spv);
-        // $sql_whr .=" AND *** IN ('$distribution_spv')";
     }
-    if ($aging_pembiayaan_from!="") {//&& $aging_pembiayaan_from!="0"
-        // $data_source = str_replace(",", "','", $data_source);
-        // $aging_pembiayaan_from = str_replace("-", "", $aging_pembiayaan_from);
-        // $sql_whr .=" AND OS_TENOR <= CAST('".$aging_pembiayaan_from."' as DECIMAL(65))";
+    if ($aging_pembiayaan_from!=="") {
         $sql_whr .=" AND MATURITY_DURATION >= CAST('".$aging_pembiayaan_from."' as DECIMAL(65))";
     }
-    if ($aging_pembiayaan_to!="") {// && $aging_pembiayaan_to!="0"
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($aging_pembiayaan_to!=="") {
         $sql_whr .=" AND MATURITY_DURATION <= CAST('".$aging_pembiayaan_to."' as DECIMAL(65))";
     }
-    if ($cust_age_from!="" && $cust_age_from!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($cust_age_from!=="" && $cust_age_from!=="0") {
         $sql_whr .=" AND AGE >= CAST('".$cust_age_from."' as DECIMAL(65))";
     }
-    if ($cust_age_to!="" && $cust_age_to!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($cust_age_to!=="" && $cust_age_to!=="0") {
         $sql_whr .=" AND AGE <= CAST('".$cust_age_to."' as DECIMAL(65))";
     }
-    if ($cust_birthday_month_from!="" && $cust_birthday_month_from!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($cust_birthday_month_from!=="" && $cust_birthday_month_from!=="0") {
         $sql_whr .=" AND MONTH(BIRTH_DT) >= '$cust_birthday_month_from'";
     }
-    if ($cust_birthday_month_to!="" && $cust_birthday_month_to!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($cust_birthday_month_to!=="" && $cust_birthday_month_to!=="0") {
         $sql_whr .=" AND MONTH(BIRTH_DT) <= '$cust_birthday_month_to'";
     }
-    // if ($cust_rating!="" && $cust_rating!="0") {
-    //     $cust_rating = str_replace(",", "','", $cust_rating);
-    //     $sql_whr .=" AND CUST_RATING IN ('$cust_rating')";
-    // }
-    // if ($gender!="" && $gender!="0") {
-    //     $gender = str_replace(",", "','", $gender);
-    //     $sql_whr .=" AND GENDER IN ('$gender')";
-    // }
     
-    if ($cust_rating!="" && $cust_rating!="0") {
+    if ($cust_rating!=="" && $cust_rating!=="0") {
         $cust_rating = str_replace(",", "','", $cust_rating);
         $cust_rating = str_replace("1", "EXCELLENT", $cust_rating);
         $cust_rating = str_replace("2", "GOOD", $cust_rating);
         $cust_rating = str_replace("3", "NORMAL", $cust_rating);
         $sql_whr .=" AND CUST_RATING IN ('$cust_rating')";
     }
-    if ($gender!="" && $gender!="0") {
+    if ($gender!=="" && $gender!=="0") {
         $gender = str_replace(",", "','", $gender);
         $gender = str_replace("1", "Laki - laki','LAKI-LAKI','M','MALE", $gender);
         $gender = str_replace("2", "F','Female','PEREMPUAN", $gender);
         $gender = str_replace("''", "'", $gender);
         $sql_whr .=" AND GENDER IN ('$gender')";
     }
-    if ($industry_type!="" && $industry_type!="0") {
+    if ($industry_type!=="" && $industry_type!=="0") {
         $industry_type = str_replace(",", "','", $industry_type);
         $sql_whr .=" AND INDUSTRY_TYPE_NAME IN ('$industry_type')";
     }
-    if ($jenis_kendaraan!="" && $jenis_kendaraan!="0") {
+    if ($jenis_kendaraan!=="" && $jenis_kendaraan!=="0") {
         $jenis_kendaraan = str_replace(",", "','", $jenis_kendaraan);
-        // $sql_whr .=" AND item_description IN ('$jenis_kendaraan')";
     }
-    if ($item_year_from!="" && $item_year_from!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($item_year_from!=="" && $item_year_from!=="0") {
         $sql_whr .=" AND ITEM_YEAR >= '$item_year_from'";
     }
-    if ($item_year_to!="" && $item_year_to!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($item_year_to!=="" && $item_year_to!=="0") {
         $sql_whr .=" AND ITEM_YEAR <= '$item_year_to'";
     }
-    if ($max_past_due_from!="" && $max_past_due_from!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($max_past_due_from!=="" && $max_past_due_from!=="0") {
         $sql_whr .=" AND MAX_OVERDUE >= CAST('".$max_past_due_from."' as DECIMAL(65))";
     }
-    if ($max_past_due_to!="" && $max_past_due_to!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($max_past_due_to!=="" && $max_past_due_to!=="0") {
         $sql_whr .=" AND MAX_OVERDUE <= CAST('".$max_past_due_to."' as DECIMAL(65))";
     }
-    if ($cust_monthly_income_from!="" && $cust_monthly_income_from!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($cust_monthly_income_from!=="" && $cust_monthly_income_from!=="0") {
         $cust_monthly_income_from = str_replace(".", "", $cust_monthly_income_from);
         $sql_whr .=" AND MONTHLY_INCOME >= '$cust_monthly_income_from'";
     }
-    if ($cust_monthly_income_to!="" && $cust_monthly_income_to!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($cust_monthly_income_to!=="" && $cust_monthly_income_to!=="0") {
         $cust_monthly_income_to = str_replace(".", "", $cust_monthly_income_to);
         $sql_whr .=" AND MONTHLY_INCOME <= '$cust_monthly_income_to'";
     }
-    if ($otr_from!="" && $otr_from!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($otr_from!=="" && $otr_from!=="0") {
         $otr_from = str_replace(".", "", $otr_from);
         $sql_whr .=" AND OTR_PRICE >= '$otr_from'";
     }
-    if ($otr_to!="" && $otr_to!="0") {
-        // $data_source = str_replace(",", "','", $data_source);
+    if ($otr_to!=="" && $otr_to!=="0") {
         $otr_to = str_replace(".", "", $otr_to);
         $sql_whr .=" AND OTR_PRICE <= '$otr_to'";
     }
-    if ($religion!="" && $religion!="0") {
+    if ($religion!=="" && $religion!=="0") {
         $religion = str_replace(",", "','", $religion);
         $sql_whr .=" AND RELIGION IN ('$religion')";
     }
-    if ($profession!=""&&$profession!="0") {
+    if ($profession!==""&&$profession!=="0") {
         $profession = str_replace(",", "','", $profession);
         $sql_whr .=" AND PROFESSION_CODE IN ('$profession')";
     }
 
-    //start customer detail
     $suc3=0;
     $err3=0;
     $sqlcektoday = "SELECT 
                 a.*
               FROM 
                 cc_ts_penawaran_job a 
-              WHERE campaign_id='0' $sql_whr ";//echo "$idcc || string $sqlcektoday </br></br>";
-              if ($idcc==5) {
-                  // echo "$idcc || string $sqlcektoday </br></br>";
+              WHERE campaign_id='0' $sql_whr ";
+              if ($idcc===5) {
+                  
               }
     $rescektoday = mysqli_query($dbopen,$sqlcektoday);
-    if($reccektoday = mysqli_fetch_array($rescektoday)){
-        $id_today_upd  = $reccektoday['id']; 
+    if($reccektoday = mysqli_fetch_object($rescektoday)){
+        $id_today_upd  = $reccektoday->id; 
 
-        //log 
         $sqllog = "INSERT INTO cc_log_service_get SET 
                       campaign_id       ='$idcc',
                       `desc`            ='puteran consumer_detail',
@@ -941,15 +887,10 @@ while($reccg = mysqli_fetch_array($rescg)){
         mysqli_query($dbopen,$sqllog);
 
         $sqlupdt = "";
-        // if ($spv_id > 0) {
-        //     $sqlupdt ="assign_to       ='$spv_id',
-        //                assign_time     =now(),";
-        // }
 
         $sqltodayupdt = "UPDATE cc_ts_penawaran_job
                          SET $sqlupdt campaign_id = '$idcc'
-                         WHERE campaign_id='0' $sql_whr ";//echo "string $sqltodayupdt </br>---------------------------------------</br>";
-        // $restodayupdt = mysqli_query($dbopen,$sqltodayupdt); 
+                         WHERE campaign_id='0' $sql_whr ";
         if($restodayupdt =  mysqli_query($dbopen,$sqltodayupdt)){ 
            $suc2++;
         }else{
@@ -958,31 +899,15 @@ while($reccg = mysqli_fetch_array($rescg)){
 
     }
     mysqli_free_result($rescektoday);
-    //end customer detail
 
 }
 
-            //REPLACE
-            // $sqlall = "REPLACE INTO cc_ts_penawaran (AGRMNT_ID,campaign_id, agrmnt_no,pipeline,distributed_date,final_result_cae,dukcapil_result,source_data,kilat_pintar,region_code,region_name,
-            //                        cabang_code,cabang_name,cabang_coll,cabang_coll_name,kapos_name,product_offering_code,lob,customer_id_ro,customer_name,nik_ktp,gender,religion,tempat_lahir,tanggal_lahir,
-            //                        spouse_nik,spouse_name,spouse_birth_date,legal_alamat,legal_rt,legal_rw,legal_provinsi,legal_city,legal_kabupaten,legal_kecamatan,legal_kelurahan,legal_kodepos,
-            //                        legal_sub_kodepos,survey_alamat,survey_rt,survey_rw,survey_provinsi,survey_city,survey_kabupaten,survey_kecamatan,survey_kelurahan,survey_kodepos,survey_sub_kodepos,
-            //                        mobile_1,mobile_2,phone_1,phone_2,office_phone_1,office_phone_2,profession_code,profession_name,profession_category_code,profession_cat_name,job_position,
-            //                        industry_type_name,other_biz_name,monthly_income,monthly_expense,monthly_instalment,dp,dp_pct,plafond,customer_rating,suppl_name,suppl_code,no_mesin,no_rangka,
-            //                        product_category,asset_category,asset_type,brand,item_type,item_desc,otr_price,item_year,ownership,kepemilikan_bpkb,agrmnt_rating,status_kontrak,sisa_tenor,tenor,
-            //                        release_date_bpkb,maturity_date,go_live_dt,rrd_date,os_principal,os_installment_amt,aging_pembiayaan,jumlah_kontrak_per_cust,estimasi_terima_bersih,started_date,
-            //                        pos_dealer,sales_dealer_id,sales_dealer,dtm_crt,usr_crt,dtm_upd,usr_upd,customer_id,kepemilikan_rumah,nama_ibu_kandung,is_repo,is_write_off,is_restructure,
-            //                        is_insurance,is_negative,exposure,ltv,dsr,marital_status,education,length_of_work,house_stay_length,
-            //                        created_by, modif_by, insert_time, modif_time)
-            //             SELECT AGRMNT_ID,campaign_id, AGRMNT_NO, PIPELINE_ID, DISTRIBUTED_DT, CAE_FINAL_RESULT, DUKCAPIL_RESULT, SOURCE_DATA, KILAT_PINTAR, OFFICE_REGION_CODE, OFFICE_REGION_NAME, OFFICE_CODE, OFFICE_NAME, CAB_COLL, CAB_COLL_NAME, KAPOS_NAME, PROD_OFFERING_CODE, LOB_CODE, CUST_NO, CUST_NAME, ID_NO, GENDER, RELIGION, BIRTH_PLACE, BIRTH_DT, SPOUSE_ID_NO, SPOUSE_NAME, SPOUSE_BIRTH_DT, ADDR_LEG, RT_LEG, RW_LEG, PROVINSI_LEG, CITY_LEG, KABUPATEN_LEG, KECAMATAN_LEG, KELURAHAN_LEG, ZIPCODE_LEG, SUB_ZIPCODE_LEG, ADDR_RES, RT_RES, RW_RES, PROVINSI_RES, CITY_RES, KABUPATEN_RES, KECAMATAN_RES, KELURAHAN_RES, ZIPCODE_RES, SUB_ZIPCODE_RES, MOBILE1, MOBILE2, PHONE1, PHONE2, OFFICE_PHONE1, OFFICE_PHONE2, PROFESSION_CODE, PROFESSION_NAME, PROFESSION_CATEGORY_CODE, PROFESSION_CATEGORY_NAME, JOB_POSITION, INDUSTRY_TYPE_NAME, OTHER_BIZ_NAME, MONTHLY_INCOME, MONTHLY_EXPENSE, MONTHLY_INSTALLMENT, DOWNPAYMENT, PERCENT_DP, PLAFOND, CUST_RATING, SUPPL_NAME, SUPPL_CODE, MACHINE_NO, CHASSIS_NO, PRODUCT_CATEGORY, ASSET_CATEGORY_CODE, ASSET_TYPE, ITEM_BRAND, ITEM_TYPE, ITEM_DESCRIPTION, OTR_PRICE, ITEM_YEAR, OWNER_RELATIONSHIP, BPKB_OWNERSHIP, AGRMNT_RATING, CONTRACT_STAT, OS_TENOR, TENOR, RELEASE_DATE_BPKB, MATURITY_DT, GO_LIVE_DT, AAM_RRD_DT, OS_PRINCIPAL, OS_INTEREST_AMT, AGING_PEMBIAYAAN, JUMLAH_KONTRAK_PERCUST, ESTIMASI_TERIMA_BERSIH, STARTED_DT, POS_DEALER, SALES_DEALER_ID, SALES_DEALER, DTM_CRT, USR_CRT, DTM_UPD, USR_UPD, CUST_ID, HOME_STAT, MOTHER_NAME, IS_REPO, IS_WRITE_OFF, IS_RESTRUKTUR, IS_INSURANCE, IS_NEGATIVE_CUST, CUST_EXPOSURE, LTV, DSR, MARITAL_STAT, EDUCATION, LENGTH_OF_WORK, HOUSE_STAY_LENGTH,'1','1',now(),now() FROM cc_ts_penawaran_job
-            //             WHERE campaign_id!='0' ";
-            // mysqli_query($dbopen,$sqlall);
 
 
     $sqljob = "SELECT * FROM cc_ts_penawaran_job
-              WHERE campaign_id='0' AND SOURCE_DATA = 'WISE'";//task_id='$taskId'
+              WHERE campaign_id='0' AND SOURCE_DATA = 'WISE'";
     $resjob = mysqli_query($dbopen,$sqljob);
-    while($recjob = mysqli_fetch_array($resjob)){
+    while($recjob = mysqli_fetch_object($resjob)){
         @extract($recjob,EXTR_OVERWRITE);
 
         $sql_in2 = "INSERT INTO cc_ts_penawaran_job_temp SET
@@ -1371,386 +1296,6 @@ while($reccg = mysqli_fetch_array($rescg)){
             $sqldelete = "DELETE FROM cc_ts_penawaran_job  
                              WHERE campaign_id='0' AND SOURCE_DATA = 'WISE'"; 
             $resdelete =  mysqli_query($dbopen,$sqldelete);
-
-            
-// $sqlengine = "SELECT a.CUST_NO,GROUP_CONCAT(a.AGRMNT_NO) AS agrmnno,GROUP_CONCAT(a.campaign_id) AS camp1,GROUP_CONCAT(b.agrmnt_no) AS agrmnno2,GROUP_CONCAT(b.campaign_id) AS camp2 
-//                             FROM cc_ts_penawaran_job a LEFT JOIN cc_ts_penawaran b
-//                             ON (a.CUST_NO=b.customer_id OR a.CUST_NO=b.customer_id_ro)
-//                             WHERE a.is_eligible_crm=1 AND b.call_status=0 AND b.campaign_id>1
-//                             GROUP BY a.CUST_NO
-//                             HAVING COUNT(a.id)>1 ";
-//             $resengine = mysqli_query($dbopen,$sqlengine);
-//             while($recengine = mysqli_fetch_array($resengine)){
-//                 $custno    = $recengine['CUST_NO']; 
-//                 $agrmnno   = $recengine['agrmnno'];
-//                 $camp1     = $recengine['camp1'];
-//                 $agrmnno2  = $recengine['agrmnno2'];
-//                 $camp2     = $recengine['camp2'];
-//                 $arrcamp1 = explode(",", $camp1);
-//                 $arrcamp2 = explode(",", $camp2);
-//                 $arrcampall = array_merge($arrcamp1,$arrcamp2);
-//                 // print_r($arrcampall);
-//                 foreach ($arrcampall as $value) {
-//                   // echo "string $value : ".$arrlevel[$value]."</br>";
-//                   $arrparam[$value]= $arrlevel[$value];
-//                 }
-//                 $val2='';
-//                 $camp_min='';
-//                 foreach($arrparam as $x => $val) {
-//                     // echo "string $x | $val </br>";
-//                     if ($val2=='') {
-//                         $val2=$val;
-//                         $camp_min=$x;
-//                     }
-//                     if ($val<$val2) {
-//                         $val2=$val;
-//                         $camp_min=$x;
-//                     }
-//                 }
-
-
-//                 $arragrmen   = explode(",", $agrmnno);
-//                 $agrmnno2 ='';
-//                 foreach($arragrmen as $x => $val) {
-//                     // echo "string $x | $val </br>";
-//                     if ($agrmnno2=='') {
-//                         $agrmnno2="'$val'";
-//                     }else{
-//                         $agrmnno2.=",'$val'";
-//                     }
-//                 }
-
-//                 $assignto=0;
-//                 $sqlpnwr = "SELECT a.assign_to FROM cc_ts_penawaran a 
-//                             WHERE a.campaign_id='$camp_min' AND (a.customer_id='$custno' OR a.customer_id_ro='$custno')
-//                             AND a.call_status=0 AND a.is_process=1 ORDER BY ISNULL(a.assign_to) ASC, a.assign_to=0 LIMIT 1";//echo "string $sqlpnwr";
-//                 $respnwr = mysqli_query($dbopen,$sqlpnwr);
-//                 if($recpnwr = mysqli_fetch_array($respnwr)){
-//                     $assignto  = $recpnwr['assign_to']; 
-//                 }
-//                 // if ($custno=='CUS116120201009534'||$custno=='CUS116120201211149') {
-//                 //     echo "string $custno 121 $assignto > $sqlengine </br>";
-//                 // }
-                
-
-//                 if ($assignto>0) {
-//                     $sqljob = "SELECT a.* FROM cc_ts_penawaran_job a 
-//                         WHERE a.CUST_NO='$custno' AND a.AGRMNT_NO IN ($agrmnno2) AND a.is_eligible_crm=1";//task_id='$taskId'
-//                       $resjob = mysqli_query($dbopen,$sqljob);
-//                       while($recjob = mysqli_fetch_array($resjob)){
-//                         @extract($recjob,EXTR_OVERWRITE);
-
-//                         if ($AGRMNT_NO!='') {
-//                             $param_agrmen = " agrmnt_no = '$AGRMNT_NO', ";
-//                         }else{
-//                             $param_agrmen = "";
-//                         }
-
-//                         $param_task = "";
-//                         if ($TASK_ID!='') {
-//                             $param_task = " task_id = '$TASK_ID', ";
-//                         }
-
-//                         $sqlsa = "INSERT INTO cc_ts_penawaran 
-//                                   SET AGRMNT_ID            = '$AGRMNT_ID', 
-//                                   campaign_id              = '$campaign_id',
-//                                   $param_agrmen 
-//                                   $param_task
-//                                   pipeline                 = '$PIPELINE_ID', 
-//                                   distributed_date         = '$DISTRIBUTED_DT', 
-//                                   final_result_cae         = '$CAE_FINAL_RESULT', 
-//                                   dukcapil_result          = '$DUKCAPIL_RESULT', 
-//                                   source_data              = '$SOURCE_DATA', 
-//                                   kilat_pintar             = '$KILAT_PINTAR', 
-//                                   region_code              = '$OFFICE_REGION_CODE', 
-//                                   region_name              = '$OFFICE_REGION_NAME', 
-//                                   cabang_code              = '$OFFICE_CODE', 
-//                                   cabang_name              = '$OFFICE_NAME', 
-//                                   cabang_coll              = '$CAB_COLL', 
-//                                   cabang_coll_name         = '$CAB_COLL_NAME', 
-//                                   kapos_name               = '$KAPOS_NAME', 
-//                                   product_offering_code    = '$PROD_OFFERING_CODE', 
-//                                   lob                      = '$LOB_CODE', 
-//                                   customer_id_ro           = '$CUST_NO', 
-//                                   customer_name            = '$CUST_NAME', 
-//                                   nik_ktp                  = '$ID_NO', 
-//                                   gender                   = '$GENDER', 
-//                                   religion                 = '$RELIGION', 
-//                                   tempat_lahir             = '$BIRTH_PLACE', 
-//                                   tanggal_lahir            = '$BIRTH_DT', 
-//                                   spouse_nik               = '$SPOUSE_ID_NO', 
-//                                   spouse_name              = '$SPOUSE_NAME', 
-//                                   spouse_birth_date        = '$SPOUSE_BIRTH_DT', 
-//                                   spouse_birth_place       = '$SPOUSE_BIRTH_PLACE', 
-//                                   legal_alamat             = '$ADDR_LEG', 
-//                                   legal_rt                 = '$RT_LEG', 
-//                                   legal_rw                 = '$RW_LEG', 
-//                                   legal_provinsi           = '$PROVINSI_LEG', 
-//                                   legal_city               = '$CITY_LEG', 
-//                                   legal_kabupaten          = '$KABUPATEN_LEG', 
-//                                   legal_kecamatan          = '$KECAMATAN_LEG', 
-//                                   legal_kelurahan          = '$KELURAHAN_LEG', 
-//                                   legal_kodepos            = '$ZIPCODE_LEG', 
-//                                   legal_sub_kodepos        = '$SUB_ZIPCODE_LEG', 
-//                                   survey_alamat            = '$ADDR_RES', 
-//                                   survey_rt                = '$RT_RES', 
-//                                   survey_rw                = '$RW_RES', 
-//                                   survey_provinsi          = '$PROVINSI_RES', 
-//                                   survey_city              = '$CITY_RES', 
-//                                   survey_kabupaten         = '$KABUPATEN_RES', 
-//                                   survey_kecamatan         = '$KECAMATAN_RES', 
-//                                   survey_kelurahan         = '$KELURAHAN_RES', 
-//                                   survey_kodepos           = '$ZIPCODE_RES', 
-//                                   survey_sub_kodepos       = '$SUB_ZIPCODE_RES', 
-//                                   mobile_1                 = '$MOBILE1', 
-//                                   mobile_2                 = '$MOBILE2', 
-//                                   phone_1                  = '$PHONE1', 
-//                                   phone_2                  = '$PHONE2', 
-//                                   office_phone_1           = '$OFFICE_PHONE1', 
-//                                   office_phone_2           = '$OFFICE_PHONE2', 
-//                                   profession_code          = '$PROFESSION_CODE', 
-//                                   profession_name          = '$PROFESSION_NAME', 
-//                                   profession_category_code = '$PROFESSION_CATEGORY_CODE', 
-//                                   profession_cat_name      = '$PROFESSION_CATEGORY_NAME', 
-//                                   job_position             = '$JOB_POSITION', 
-//                                   industry_type_name       = '$INDUSTRY_TYPE_NAME', 
-//                                   other_biz_name           = '$OTHER_BIZ_NAME', 
-//                                   monthly_income           = '$MONTHLY_INCOME', 
-//                                   monthly_expense          = '$MONTHLY_EXPENSE', 
-//                                   monthly_instalment       = '$MONTHLY_INSTALLMENT', 
-//                                   dp                       = '$DOWNPAYMENT', 
-//                                   dp_pct                   = '$PERCENT_DP', 
-//                                   plafond                  = '$PLAFOND', 
-//                                   customer_rating          = '$CUST_RATING', 
-//                                   suppl_name               = '$SUPPL_NAME', 
-//                                   suppl_code               = '$SUPPL_CODE', 
-//                                   no_mesin                 = '$MACHINE_NO', 
-//                                   no_rangka                = '$CHASSIS_NO', 
-//                                   product_category         = '$PRODUCT_CATEGORY', 
-//                                   asset_category           = '$ASSET_CATEGORY_CODE', 
-//                                   asset_type               = '$ASSET_TYPE', 
-//                                   asset_age                = '$ASSET_AGE', 
-//                                   brand                    = '$ITEM_BRAND', 
-//                                   item_type                = '$ITEM_TYPE', 
-//                                   item_desc                = '$ITEM_DESCRIPTION', 
-//                                   otr_price                = '$OTR_PRICE', 
-//                                   item_year                = '$ITEM_YEAR', 
-//                                   ownership                = '$OWNER_RELATIONSHIP', 
-//                                   kepemilikan_bpkb         = '$BPKB_OWNERSHIP', 
-//                                   agrmnt_rating            = '$AGRMNT_RATING', 
-//                                   status_kontrak           = '$CONTRACT_STAT', 
-//                                   sisa_tenor               = '$OS_TENOR', 
-//                                   tenor                    = '$TENOR', 
-//                                   release_date_bpkb        = '$RELEASE_DATE_BPKB', 
-//                                   maturity_date            = '$MATURITY_DT', 
-//                                   go_live_dt               = '$GO_LIVE_DT', 
-//                                   rrd_date                 = '$AAM_RRD_DT', 
-//                                   os_principal             = '$OS_PRINCIPAL', 
-//                                   os_installment_amt       = '$OS_INTEREST_AMT', 
-//                                   aging_pembiayaan         = '$AGING_PEMBIAYAAN', 
-//                                   jumlah_kontrak_per_cust  = '$JUMLAH_KONTRAK_PERCUST', 
-//                                   estimasi_terima_bersih   = '$ESTIMASI_TERIMA_BERSIH', 
-//                                   started_date             = '$STARTED_DT', 
-//                                   pos_dealer               = '$POS_DEALER', 
-//                                   sales_dealer_id          = '$SALES_DEALER_ID', 
-//                                   sales_dealer             = '$SALES_DEALER', 
-//                                   dtm_crt                  = '$DTM_CRT', 
-//                                   usr_crt                  = '$USR_CRT', 
-//                                   dtm_upd                  = '$DTM_UPD', 
-//                                   usr_upd                  = '$USR_UPD', 
-//                                   customer_id              = '$CUST_ID', 
-//                                   kepemilikan_rumah        = '$HOME_STAT', 
-//                                   nama_ibu_kandung         = '$MOTHER_NAME', 
-//                                   is_repo                  = '$IS_REPO', 
-//                                   is_write_off             = '$IS_WRITE_OFF', 
-//                                   is_restructure           = '$IS_RESTRUKTUR', 
-//                                   is_insurance             = '$IS_INSURANCE', 
-//                                   is_negative              = '$IS_NEGATIVE_CUST', 
-//                                   exposure                 = '$CUST_EXPOSURE', 
-//                                   ltv                      = '$LTV', 
-//                                   dsr                      = '$DSR', 
-//                                   marital_status           = '$MARITAL_STAT', 
-//                                   education                = '$EDUCATION', 
-//                                   length_of_work           = '$LENGTH_OF_WORK', 
-//                                   house_stay_length        = '$HOUSE_STAY_LENGTH', 
-//                                   created_by               = '$v_agentid', 
-//                                   modif_by                 = '$v_agentid', 
-//                                   insert_time              = now(), 
-//                                   modif_time               = now(), 
-//                                   spv_id                   = '$v_agentid',
-//                                   assign_to                = '$assignto', 
-//                                   call_status              ='0',
-//                                   assign_by                = '$v_agentid', 
-//                                   back_flag                = '0', 
-//                                   flag_wise                = '$flag_wise',
-//                                   is_eligible_crm          = '$is_eligible_crm',
-//                                   is_process               = '$is_process',
-//                                   total_course             = '0',
-                                                                                 
-//                                   assign_time              = now()
-//                                   ON DUPLICATE KEY UPDATE
-//                                   AGRMNT_ID                = '$AGRMNT_ID', 
-//                                   campaign_id              = '$campaign_id', 
-//                                   $param_agrmen
-//                                   $param_task
-//                                   pipeline                 = '$PIPELINE_ID', 
-//                                   distributed_date         = '$DISTRIBUTED_DT', 
-//                                   final_result_cae         = '$CAE_FINAL_RESULT', 
-//                                   dukcapil_result          = '$DUKCAPIL_RESULT', 
-//                                   source_data              = '$SOURCE_DATA', 
-//                                   kilat_pintar             = '$KILAT_PINTAR', 
-//                                   region_code              = '$OFFICE_REGION_CODE', 
-//                                   region_name              = '$OFFICE_REGION_NAME', 
-//                                   cabang_code              = '$OFFICE_CODE', 
-//                                   cabang_name              = '$OFFICE_NAME', 
-//                                   cabang_coll              = '$CAB_COLL', 
-//                                   cabang_coll_name         = '$CAB_COLL_NAME', 
-//                                   kapos_name               = '$KAPOS_NAME', 
-//                                   product_offering_code    = '$PROD_OFFERING_CODE', 
-//                                   lob                      = '$LOB_CODE', 
-//                                   customer_id_ro           = '$CUST_NO', 
-//                                   customer_name            = '$CUST_NAME', 
-//                                   nik_ktp                  = '$ID_NO', 
-//                                   gender                   = '$GENDER', 
-//                                   religion                 = '$RELIGION', 
-//                                   tempat_lahir             = '$BIRTH_PLACE', 
-//                                   tanggal_lahir            = '$BIRTH_DT', 
-//                                   spouse_nik               = '$SPOUSE_ID_NO', 
-//                                   spouse_name              = '$SPOUSE_NAME', 
-//                                   spouse_birth_date        = '$SPOUSE_BIRTH_DT', 
-//                                   spouse_birth_place       = '$SPOUSE_BIRTH_PLACE', 
-//                                   legal_alamat             = '$ADDR_LEG', 
-//                                   legal_rt                 = '$RT_LEG', 
-//                                   legal_rw                 = '$RW_LEG', 
-//                                   legal_provinsi           = '$PROVINSI_LEG', 
-//                                   legal_city               = '$CITY_LEG', 
-//                                   legal_kabupaten          = '$KABUPATEN_LEG', 
-//                                   legal_kecamatan          = '$KECAMATAN_LEG', 
-//                                   legal_kelurahan          = '$KELURAHAN_LEG', 
-//                                   legal_kodepos            = '$ZIPCODE_LEG', 
-//                                   legal_sub_kodepos        = '$SUB_ZIPCODE_LEG', 
-//                                   survey_alamat            = '$ADDR_RES', 
-//                                   survey_rt                = '$RT_RES', 
-//                                   survey_rw                = '$RW_RES', 
-//                                   survey_provinsi          = '$PROVINSI_RES', 
-//                                   survey_city              = '$CITY_RES', 
-//                                   survey_kabupaten         = '$KABUPATEN_RES', 
-//                                   survey_kecamatan         = '$KECAMATAN_RES', 
-//                                   survey_kelurahan         = '$KELURAHAN_RES', 
-//                                   survey_kodepos           = '$ZIPCODE_RES', 
-//                                   survey_sub_kodepos       = '$SUB_ZIPCODE_RES', 
-//                                   mobile_1                 = '$MOBILE1', 
-//                                   mobile_2                 = '$MOBILE2', 
-//                                   phone_1                  = '$PHONE1', 
-//                                   phone_2                  = '$PHONE2', 
-//                                   office_phone_1           = '$OFFICE_PHONE1', 
-//                                   office_phone_2           = '$OFFICE_PHONE2', 
-//                                   profession_code          = '$PROFESSION_CODE', 
-//                                   profession_name          = '$PROFESSION_NAME', 
-//                                   profession_category_code = '$PROFESSION_CATEGORY_CODE', 
-//                                   profession_cat_name      = '$PROFESSION_CATEGORY_NAME', 
-//                                   job_position             = '$JOB_POSITION', 
-//                                   industry_type_name       = '$INDUSTRY_TYPE_NAME', 
-//                                   other_biz_name           = '$OTHER_BIZ_NAME', 
-//                                   monthly_income           = '$MONTHLY_INCOME', 
-//                                   monthly_expense          = '$MONTHLY_EXPENSE', 
-//                                   monthly_instalment       = '$MONTHLY_INSTALLMENT', 
-//                                   dp                       = '$DOWNPAYMENT', 
-//                                   dp_pct                   = '$PERCENT_DP', 
-//                                   plafond                  = '$PLAFOND', 
-//                                   customer_rating          = '$CUST_RATING', 
-//                                   suppl_name               = '$SUPPL_NAME', 
-//                                   suppl_code               = '$SUPPL_CODE', 
-//                                   no_mesin                 = '$MACHINE_NO', 
-//                                   no_rangka                = '$CHASSIS_NO', 
-//                                   product_category         = '$PRODUCT_CATEGORY', 
-//                                   asset_category           = '$ASSET_CATEGORY_CODE', 
-//                                   asset_type               = '$ASSET_TYPE', 
-//                                   asset_age                = '$ASSET_AGE', 
-//                                   brand                    = '$ITEM_BRAND', 
-//                                   item_type                = '$ITEM_TYPE', 
-//                                   item_desc                = '$ITEM_DESCRIPTION', 
-//                                   otr_price                = '$OTR_PRICE', 
-//                                   item_year                = '$ITEM_YEAR', 
-//                                   ownership                = '$OWNER_RELATIONSHIP', 
-//                                   kepemilikan_bpkb         = '$BPKB_OWNERSHIP', 
-//                                   agrmnt_rating            = '$AGRMNT_RATING', 
-//                                   status_kontrak           = '$CONTRACT_STAT', 
-//                                   sisa_tenor               = '$OS_TENOR', 
-//                                   tenor                    = '$TENOR', 
-//                                   release_date_bpkb        = '$RELEASE_DATE_BPKB', 
-//                                   maturity_date            = '$MATURITY_DT', 
-//                                   go_live_dt               = '$GO_LIVE_DT', 
-//                                   rrd_date                 = '$AAM_RRD_DT', 
-//                                   os_principal             = '$OS_PRINCIPAL', 
-//                                   os_installment_amt       = '$OS_INTEREST_AMT', 
-//                                   aging_pembiayaan         = '$AGING_PEMBIAYAAN', 
-//                                   jumlah_kontrak_per_cust  = '$JUMLAH_KONTRAK_PERCUST', 
-//                                   estimasi_terima_bersih   = '$ESTIMASI_TERIMA_BERSIH', 
-//                                   started_date             = '$STARTED_DT', 
-//                                   pos_dealer               = '$POS_DEALER', 
-//                                   sales_dealer_id          = '$SALES_DEALER_ID', 
-//                                   sales_dealer             = '$SALES_DEALER', 
-//                                   dtm_crt                  = '$DTM_CRT', 
-//                                   usr_crt                  = '$USR_CRT', 
-//                                   dtm_upd                  = '$DTM_UPD', 
-//                                   usr_upd                  = '$USR_UPD', 
-//                                   customer_id              = '$CUST_ID', 
-//                                   kepemilikan_rumah        = '$HOME_STAT', 
-//                                   nama_ibu_kandung         = '$MOTHER_NAME', 
-//                                   is_repo                  = '$IS_REPO', 
-//                                   is_write_off             = '$IS_WRITE_OFF', 
-//                                   is_restructure           = '$IS_RESTRUKTUR', 
-//                                   is_insurance             = '$IS_INSURANCE', 
-//                                   is_negative              = '$IS_NEGATIVE_CUST', 
-//                                   exposure                 = '$CUST_EXPOSURE', 
-//                                   ltv                      = '$LTV', 
-//                                   dsr                      = '$DSR', 
-//                                   marital_status           = '$MARITAL_STAT', 
-//                                   education                = '$EDUCATION', 
-//                                   length_of_work           = '$LENGTH_OF_WORK', 
-//                                   house_stay_length        = '$HOUSE_STAY_LENGTH', 
-//                                   created_by               = '$v_agentid', 
-//                                   modif_by                 = '$v_agentid', 
-//                                   insert_time              = now(), 
-//                                   modif_time               = now(), 
-//                                   spv_id                   = '$v_agentid',
-//                                   assign_to                = '$assignto', 
-//                                   call_status              ='0',
-//                                   assign_by                = '$v_agentid',
-//                                   back_flag                = '0',  
-//                                   flag_wise                = '$flag_wise',
-//                                   is_eligible_crm          = '$is_eligible_crm',
-//                                   is_process               = '$is_process',
-                                                                                 
-//                                   total_course             = '0',
-//                                   assign_time              = now()
-//                                   ";//echo "string $sqlsa </br></br>";
-
-//                                   mysqli_query($dbopen,$sqlsa);
-                                  
-//                                 $sqlupd = "UPDATE cc_ts_penawaran_job SET is_assign = 1 WHERE id=$id";
-//                                 mysqli_query($dbopen, $sqlupd);
-//                         }
-//                 }else{
-//                     $sqlupd = "UPDATE cc_ts_penawaran SET assign_to = 0 WHERE (customer_id='$custno' OR customer_id_ro='$custno')
-//                                AND call_status=0";
-//                                 mysqli_query($dbopen, $sqlupd);
-
-//                     $sqlupd2 = "UPDATE cc_ts_penawaran_job SET is_assign = 0 WHERE CUST_NO='$custno' AND is_assign=1 AND is_eligible_crm=1";
-//                     mysqli_query($dbopen, $sqlupd2);
-
-//                     // if ($custno=='CUS116120201009534'||$custno=='CUS116120201211149') {
-//                     //     echo "string $sqlupd > $sqlupd2</br>";
-//                     // }
-//                 }
-
-
-//         }
-
-
-
-
            
 
 disconnectDB($dbopen);

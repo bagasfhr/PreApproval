@@ -1,19 +1,28 @@
 <?php
-include "config_api.php";
-include "../../sysconf/global_func.php";
-include "../../sysconf/db_config.php";
+$path = "config_api.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "global_func.php";
+if (file_exists($path)) {
+        include $path;
+}
+$path = "db_config.php";
+if (file_exists($path)) {
+        include $path;
+}
 
 $condb = connectDB();
 
-$nik               = $_GET['nik'];
-$customer_id       = $_GET['customer_id'];
-$PreApproval       = $_GET['PreApproval'];
-$custname          = $_GET['nama_lengkap'];
-$birthplace        = $_GET['tempat_lahir'];
-$bod               = $_GET['tgl_lahir']; 
-$app_no            = $_GET['app_no'];
+$nik               = $xxx = filter_input(INPUT_GET, 'nik'];
+$customer_id       = $xxx = filter_input(INPUT_GET, 'customer_id'];
+$PreApproval       = $xxx = filter_input(INPUT_GET, 'PreApproval'];
+$custname          = $xxx = filter_input(INPUT_GET, 'nama_lengkap'];
+$birthplace        = $xxx = filter_input(INPUT_GET, 'tempat_lahir'];
+$bod               = $xxx = filter_input(INPUT_GET, 'tgl_lahir']; 
+$app_no            = $xxx = filter_input(INPUT_GET, 'app_no'];
 $sqlpreapr = "";
-if ($PreApproval==1) {
+if ($PreApproval===1) {
   $sqlpreapr = ', "IsPreApproval":"1"';
 }else{
   $sqlpreapr = ', "IsPreApproval":"0"';
@@ -29,7 +38,7 @@ if ($PreApproval==1) {
         "source":"CRM"'.$sqlpreapr.',
         "app_no":"'.$app_no.'"
         }';
-        if ($customer_id=='') {
+        if ($customer_id==='') {
           $payload = '{
                       "check_type":"negative cust",
                       "cust_no":"'.$customer_id.'",
@@ -42,14 +51,7 @@ if ($PreApproval==1) {
                       }';
         }
     $curl = curl_init();
-    // "NIK":"3256389511257895",
-    // "CustName":"MARIA ANANTA",
-    // "BirthPlace":"JAKARTA",
-    // "BirthDt":"1993-01-01",
-    // "MotherMaidenNmae":"SITI"
-    // CURLOPT_URL => 'https://10.0.89.228:8080/cae_score',
     curl_setopt_array($curl, array(
-      // CURLOPT_URL => 'http://10.0.89.228:8080/cae_score',
       CURLOPT_URL => 'http://10.0.89.213:8080/cae_score',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
@@ -69,11 +71,7 @@ if ($PreApproval==1) {
     
     $resp = json_decode($response, true);
     curl_close($curl);
-    // print_r($resp);
-      // return $response;
-    // $resp = json_decode($result, true);
 
-    //start new
     $test = $resp['data'];
     $test2 = $test['listDuplicateObj'];
     $response_cabang ="";
@@ -83,16 +81,16 @@ if ($PreApproval==1) {
         $test4 = $test3['officeName'];
         $wise_stat = $test3['wiseStat'];
         $mss_stat  = $test3['mssStat'];
-        if ($wise_stat!='') {
+        if ($wise_stat!=='') {
           $stat = $wise_stat;
         }else{
-          if ($mss_stat!='') {
+          if ($mss_stat!=='') {
             $stat = $mss_stat;
           }else{
             $stat="Prosess";
           }
         }
-        if ($test4!="") {
+        if ($test4!=="") {
           $response_total++;
           $response_cabang .= "Cabang $test4 : $stat </br> ";
         }
@@ -100,7 +98,6 @@ if ($PreApproval==1) {
     }
 
     $response = str_replace('"responseCode":"00",', '"responseCode":"00","responseTotal":"'.$response_total.'", "responseCabang":"'.$response_cabang.'",', $response);
-    //end new
     echo $response;
 
 
@@ -113,7 +110,7 @@ $sqllog = "INSERT INTO cc_respons_log SET
                 respon_status       ='$responseMessage', 
                 respon_desc         ='$response', 
                 respon_time         =now()";
-$reslog = mysqli_query($condb,$sqllog);//echo "string $sqllog";
+$reslog = mysqli_query($condb,$sqllog);
 
 
 disconnectDB($condb);
