@@ -98,21 +98,21 @@ $varassignto .= "</select>";
 }
 </style>
 <form name="frmDataDet" id="frmDataDet" method="POST">
-<input type="hidden" name="iddet" id="iddet" value="<?php echo $iddet;?>">
+<input type="hidden" name="iddet" id="iddet" value="iddet" />
 
-<input type="hidden" name="blist_date" id="blist_date" value="<?php echo $blist_date;?>">
-<input type="hidden" name="blist_fcount" id="blist_fcount" value="<?php echo $blist_fcount;?>">
-<input type="hidden" name="blist_csearch0" id="blist_csearch0" value="<?php echo $blist_csearch0;?>">
-<input type="hidden" name="blist_tsearch0" id="blist_tsearch0" value="<?php echo $blist_tsearch0;?>">
-<input type="hidden" name="blist_csearch1" id="blist_csearch1" value="<?php echo $blist_csearch1;?>">
-<input type="hidden" name="blist_tsearch1" id="blist_tsearch1" value="<?php echo $blist_tsearch1;?>">
-<input type="hidden" name="blist_csearch2" id="blist_csearch2" value="<?php echo $blist_csearch2;?>">
-<input type="hidden" name="blist_tsearch2" id="blist_tsearch2" value="<?php echo $blist_tsearch2;?>">
-<input type="hidden" name="blist_csearch3" id="blist_csearch3" value="<?php echo $blist_csearch3;?>">
-<input type="hidden" name="blist_tsearch3" id="blist_tsearch3" value="<?php echo $blist_tsearch3;?>">
-<input type="hidden" name="blist_csearch4" id="blist_csearch4" value="<?php echo $blist_csearch4;?>">
-<input type="hidden" name="blist_tsearch4" id="blist_tsearch4" value="<?php echo $blist_tsearch4;?>">
-<input type="hidden" name="search" id="search" value="<?php echo $search;?>">
+<input type="hidden" name="blist_date" id="blist_date" value="blist_date" />
+<input type="hidden" name="blist_fcount" id="blist_fcount" value="blist_fcount" />
+<input type="hidden" name="blist_csearch0" id="blist_csearch0" value="blist_csearch0" />
+<input type="hidden" name="blist_tsearch0" id="blist_tsearch0" value="blist_tsearch0" />
+<input type="hidden" name="blist_csearch1" id="blist_csearch1" value="blist_csearch1" />
+<input type="hidden" name="blist_tsearch1" id="blist_tsearch1" value="blist_tsearch1" />
+<input type="hidden" name="blist_csearch2" id="blist_csearch2" value="blist_csearch2" />
+<input type="hidden" name="blist_tsearch2" id="blist_tsearch2" value="blist_tsearch2" />
+<input type="hidden" name="blist_csearch3" id="blist_csearch3" value="blist_csearch3" />
+<input type="hidden" name="blist_tsearch3" id="blist_tsearch3" value="blist_tsearch3" />
+<input type="hidden" name="blist_csearch4" id="blist_csearch4" value="blist_csearch4" />
+<input type="hidden" name="blist_tsearch4" id="blist_tsearch4" value="blist_tsearch4" />
+<input type="hidden" name="search" id="search" value="search" />
 <input type="hidden" name="assignto2" id="assignto2" value="" />
 <input type="hidden" name="temp_regional" id="temp_regional" value="" />
 <input type="hidden" name="temp_asset" id="temp_asset" value="" />
@@ -312,8 +312,8 @@ $varassignto .= "</select>";
 <div style="height:100%;top:0px;left:0px;position: fixed;z-index: 999999;text-align: center;width:100%;display: none" id="tempatLoading">
    <div style="width:400px;margin:auto;margin-top:200px;padding:10px;">
      <img src="assets/img/elyphsoft.gif" width="140px" style="border: 0px;border-radius: 4px;padding: 1px;border-radius:150px">
-      <h1 style="font-weight:bold;color: white; text-shadow: -2px -2px 0 <?php echo $dominant_mastercolor_darker ?>, 2px -2px 0 <?php echo $dominant_mastercolor_darker ?>, -2px 2px 0 <?php echo $dominant_mastercolor_darker ?>, 2px 2px 0 <?php echo $dominant_mastercolor_darker ?>;">Please Wait</h1>
-      <h2 style="font-weight:bold;color: white; text-shadow: -2px -2px 0 <?php echo $dominant_mastercolor_darker ?>, 2px -2px 0 <?php echo $dominant_mastercolor_darker ?>, -2px 2px 0 <?php echo $dominant_mastercolor_darker ?>, 2px 2px 0 <?php echo $dominant_mastercolor_darker ?>;">While We're Hit Your Data</h2>
+      <h1 style="font-weight:bold;color: white; text-shadow: -2px -2px 0 dominant_mastercolor_darker, 2px -2px 0 dominant_mastercolor_darker, -2px 2px 0 dominant_mastercolor_darker, 2px 2px 0 dominant_mastercolor_darker;">Please Wait</h1>
+      <h2 style="font-weight:bold;color: white; text-shadow: -2px -2px 0 dominant_mastercolor_darker, 2px -2px 0 dominant_mastercolor_darker, -2px 2px 0 dominant_mastercolor_darker, 2px 2px 0 dominant_mastercolor_darker;">While We're Hit Your Data</h2>
    </div>
   </div>
 <?php
@@ -412,7 +412,7 @@ disconnectDB($condb);
 	    	if (method === 2) {
 	    	table = $('#datatablelist').DataTable();
 	    		$.ajax({
-            url: "<?php echo $link_data_acc;?>&cmbcampaign="+this.value,
+            url: "link_data_acc&cmbcampaign="+this.value,
             type: "post"
           }).done(function (result) {
             result = jQuery.parseJSON(result);
@@ -549,7 +549,7 @@ disconnectDB($condb);
 
     $("#agt_skill_id").on('change',function() {
       var skill = document.getElementById("agt_skill_id").value;
-      var grpid = "<?php echo $v_agentgroup;?>";
+      var grpid = "v_agentgroup";
       method = $('#assignment_method').val();
       if(skill !==== "" && (method === '1' && method !==== 0)) {
         document.getElementById('agent_select').style.display = 'none';
@@ -557,7 +557,7 @@ disconnectDB($condb);
 
         $.ajax({ 
           type: 'POST', 
-          url: "<?php echo $get_data; ?>",
+          url: "get_data",
           data: dStr,
           dataType:'json', 
           success: function (data) {
@@ -697,13 +697,13 @@ disconnectDB($condb);
       var paramcheck2 = '';
       var skill = document.getElementById("agt_skill_id").value;
       document.getElementById("param_search").value = val_search;
-      var grpid = "<?php echo $v_agentgroup;?>";
+      var grpid = "v_agentgroup";
 
       var dStr  = "v=wskill&skillid="+skill+"&grpid="+grpid+"&val_search="+val_search+"&paramcheck="+paramcheck2;
       
         $.ajax({ 
               type: 'POST', 
-              url: "<?php echo $get_data; ?>",
+              url: "get_data",
               data: dStr,
               dataType:'json', 
               success: function (data) {
@@ -882,7 +882,7 @@ disconnectDB($condb);
       if (countdata === "") {
       	countdata = countcek;
       }
-      var limitdata   = "<?php echo $limit_distribution ?>";
+      var limitdata   = "limit_distribution";
 			var method      = $("#assignment_method").val();
       
       var fvalid      = form.valid();
@@ -938,7 +938,7 @@ disconnectDB($condb);
     							 data.append('key', 'value');	
     							
     							 $.ajax({
-    						        url: "<?php echo $save_form; ?>",
+    						        url: "save_form",
     						        type: "post",
     						        data: data,
     							    processData: false,
@@ -1017,7 +1017,7 @@ disconnectDB($condb);
 							 data.append('key', 'value');	
 							
 							 $.ajax({
-						      url: "<?php echo $save_form; ?>",
+						      url: "save_form",
 						      type: "post",
 						      data: data,
 							    processData: false,
@@ -1062,7 +1062,7 @@ disconnectDB($condb);
 						}
 					}).then((Save) => {
 						if (Save) {
-							var alink= "<?php echo $ffolder;?>|<?php echo $fmenu_link_back;?>|<?php echo $fdescription;?>|<?php echo $fmenu_id;?>|<?php echo $ficon;?>|<?php echo $fiddet;?>|<?php echo $fblist;?>"
+							var alink= "ffolder|fmenu_link_back|fdescription|fmenu_id|ficon|fiddet|fblist"
 							var link = "index.php?v="+encodeURI(btoa(alink));
 							window.location.href = link;
 						} else {
@@ -1100,7 +1100,7 @@ disconnectDB($condb);
 							 data.append('key', 'value');	
 							
 							 $.ajax({
-						        url: "<?php echo $save_form; ?>?v=del&iddet="+iddet,
+						        url: "save_form?v=del&iddet="+iddet,
 						        type: "post",
 						        data: data,
 							    processData: false,
@@ -1134,7 +1134,7 @@ function edit(param){
 	<?php
 	$menuact  = $ffolder."|".$menu_linkdet."|".$menu_label."|".$fmenu_id."|".$ficon."|";
 	?>
-	var link = "index.php?v="+encodeURI(btoa('<?php echo $menuact ?>'+idIndex));
+	var link = "index.php?v="+encodeURI(btoa('menuact ?>'+idIndex));
     
     window.location = link;
 	}

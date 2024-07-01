@@ -134,7 +134,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-address-card"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_prospect;?></a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_prospect</a></b></h5>
 										<small class="text-muted"><b>Prospek</b></small>
 									</div>
 								</div>
@@ -147,7 +147,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-calendar-check"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_interest;?></a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_interest</a></b></h5>
 										<small class="text-muted"><b>Interest</b></small>
 									</div>
 								</div>
@@ -160,7 +160,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-phone-slash"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_unconnected;?> </a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_unconnected;?> </a></b></h5>
 										<small class="text-muted"><b>UnConnected</b></small>
 									</div>
 								</div>
@@ -173,7 +173,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-phone"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_followup;?></a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_followup</a></b></h5>
 										<small class="text-muted"><b>FollowUp</b></small>
 									</div>
 								</div>
@@ -186,7 +186,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-user-edit"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_new;?> </a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_new;?> </a></b></h5>
 										<small class="text-muted"><b>New</b></small>
 									</div>
 								</div>
@@ -199,7 +199,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-user-slash"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_notinterest;?></a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_notinterest</a></b></h5>
 										<small class="text-muted"><b>Not Interest</b></small>
 									</div>
 								</div>
@@ -212,7 +212,7 @@ if($cmbcallstatus!==''){
 										<i class="fas fa-user-times"></i>
 									</span>
 									<div>
-										<h5 class="mb-1"><b><a href="#"><?php echo $call_uncontacted;?></a></b></h5>
+										<h5 class="mb-1"><b><a href="#">call_uncontacted</a></b></h5>
 										<small class="text-muted"><b>UnAnswer</b></small>
 									</div>
 								</div>

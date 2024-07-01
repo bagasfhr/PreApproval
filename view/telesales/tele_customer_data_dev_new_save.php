@@ -834,7 +834,7 @@ $sqlall = "INSERT INTO cc_ts_penawaran_history (form_id,
                 SELECT '$form_id','$add_asset_id',a.*,'$v_agentid',NOW() FROM cc_ts_penawaran_temp a
                         WHERE a.id='$iddet'"; 
 if($rec_u = mysqli_query($condb,$sqlall)) {
-    echo "Success!";
+    
     $sqldel = "DELETE FROM cc_ts_penawaran_temp_all WHERE (customer_id='$txt_customer_no' OR customer_id_ro='$txt_customer_no')";
     $rec_i = mysqli_query($condb,$sqldel);
 
@@ -851,7 +851,7 @@ if($rec_u = mysqli_query($condb,$sqlall)) {
     $rec_i = mysqli_query($condb,$sqlinserttemp);
 
 } else {
-    echo "Failed";
+    
 }
  
 disconnectDB($condb);

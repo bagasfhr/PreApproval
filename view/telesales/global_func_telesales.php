@@ -108,14 +108,13 @@ function get_agent_by_skill(){
 
   $data['sel'] = $sel;
   $data['sql'] = $sql;
-  echo json_encode($data);
 
 }
 
 function get_datatable_bucket(){
   $condb = connectDB();
   $v_agentid = get_session('v_agentid');
-  $cmbcampaign = $xxx = filter_input(INPUT_GET, 'cmbcampaign'];
+  $cmbcampaign = filter_input(INPUT_GET, 'cmbcampaign');
 
   $cmbcampaign !== '' ? $wcampaign = 'AND c.id = '.$cmbcampaign: $wcampaign = '';
   if ($cmbcampaign === 1) {
@@ -137,8 +136,8 @@ function get_datatable_bucket(){
     c.id=a.campaign_id AND is_assign!==1 AND is_eligible_crm=1 AND is_process=1 ".$wcampaign."";
   }
    
-  $date_period  = $xxx = filter_input(INPUT_GET, 'date_period'];
-  $txt_search   = $xxx = filter_input(INPUT_GET, 'txt_search'];
+  $date_period = filter_input(INPUT_GET, 'date_period');
+  $txt_search = filter_input(INPUT_GET, 'txt_search');
 
   $sDate = "";
   if($date_period!=='') {
@@ -147,14 +146,14 @@ function get_datatable_bucket(){
   }
 
   for ( $i=0 ; $i<count($aColumns) ; $i++ ) {
-    if($xxx = filter_input(INPUT_GET, 'bSearchable_'.$i] === "true" && $xxx = filter_input(INPUT_GET, 'sSearch_'.$i] !== '' ) {
+    if(filter_input(INPUT_GET, 'bSearchable_'.$i] === "true" && filter_input(INPUT_GET, 'sSearch_'.$i] !== '' ) {
       if($sWhere === "" ) {
         $sWhere = "AND ";
       } else {
        $sWhere .= " AND ";
       }
 
-     $sWhere .= $aColumns[$i]." LIKE '%".mysqli_real_escape_string($condb, $xxx = filter_input(INPUT_GET, 'sSearch_'.$i])."%' ";
+     $sWhere .= $aColumns[$i]." LIKE '%".mysqli_real_escape_string($condb, filter_input(INPUT_GET, 'sSearch_'.$i])."%' ";
     }
   }
 
@@ -166,8 +165,7 @@ function get_datatable_bucket(){
     $sOrder
     $sLimit
   "; 
-  if(isset($xxx = filter_input(INPUT_GET, 'mode'])) {
-    echo $sQuery;
+  if(isset(filter_input(INPUT_GET, 'mode'))) {
   }
   $rResult = mysqli_query($condb, $sQuery);
   $xsQuery = $sQuery;
@@ -189,7 +187,7 @@ function get_datatable_bucket(){
 
 
   $output = array(
-    "sEcho" => intval($xxx = filter_input(INPUT_GET, 'sEcho']),
+    "sEcho" => intval(filter_input(INPUT_GET, 'sEcho')),
     "iTotalRecords" => $iTotal,
     "iTotalDisplayRecords" => $iFilteredTotal,
     "aaData" => array(),
@@ -228,7 +226,6 @@ function get_datatable_bucket(){
   freeResSQL($rResultFilterTotal);
   freeResSQL($rResultTotal);
   disconnectDB($condb);
-  echo json_encode($output);
 }
 
 function count_data(){
@@ -340,7 +337,6 @@ function count_data(){
   $total_data['custno'] = $param_custno;
   $total_data['sql'] = $sql;
 
-  echo json_encode($total_data);
 }
 
 function load_det_campaign(){
@@ -376,7 +372,7 @@ function load_det_campaign(){
       $itype++;
     }
   }
-  echo json_encode($data);
+ 
 }
 
 function assign_by_contract(){
@@ -1286,14 +1282,11 @@ function assign_by_contract(){
           $sqlins = "INSERT INTO cc_agent_trail_log SET agent_id = '".$v_agentid."', trail_desc='Success, ".$tot_assign.", ".$total_data.",|$detail_assign|, QUERY : ".mysqli_real_escape_string($condb, $sql)."', insert_time=now()";
           mysqli_query($condb, $sqlins);
 
-          echo 'Success!|'.$tot_assign.'|'.$total_data;
         }else{
           if ($total_data > 0) {
             $sqlins = "INSERT INTO cc_agent_trail_log SET agent_id = '".$v_agentid."', trail_desc='Failed Error, ".$tot_assign.", ".$total_data.",|$detail_assign|,$param_updt, QUERY : ".mysqli_real_escape_string($condb, $sql)."', insert_time=now()";
             mysqli_query($condb, $sqlins);
-            echo 'Failed! Error|'.$sqlsa;
           }else{
-            echo "Failed! Data Not Found|";
           }
         }
       }
@@ -2064,11 +2057,9 @@ function assign_by_contract(){
         $detail_assign = "$agent_to : $total ";
         $sqlins = "INSERT INTO cc_agent_trail_log SET agent_id = '".$v_agentid."', trail_desc='Success, ".$success.", ".$total.",|$detail_assign|, where : ".mysqli_real_escape_string($condb, $where)."', insert_time=now()";
         mysqli_query($condb, $sqlins);
-        echo 'Success!|'.$success.'|'.$total;
       }
       break;
     default:
-      echo "Method Not Found";
       break;
   }
 }
@@ -2090,7 +2081,6 @@ function validate_number_priority_campaign(){
   }
   mysqli_free_result($res);
 
-  echo json_encode($messages);
 }
 
 function validate_number_priority_campaign2(){
@@ -2110,7 +2100,6 @@ function validate_number_priority_campaign2(){
   }
   mysqli_free_result($res);
 
-  echo json_encode($messages);
 }
 
 function get_select_campaign_by_group($conDB, $id, $name, $required, $campaign_id){
@@ -2165,7 +2154,6 @@ function get_select_regional(){
   $data['arrSel'] = $sel;
   $data['sql'] = $sql;
 
-  echo json_encode($data);
 
 }
 
@@ -2196,7 +2184,6 @@ function get_select_asset_type(){
   $data['arrSel'] = $sel;
   $data['sql'] = $sql;
 
-  echo json_encode($data);
 }
 
 function get_select_kategori_kendaraan(){
@@ -2220,7 +2207,6 @@ function get_select_kategori_kendaraan(){
   $data['arrSel'] = $sel;
   $data['sql'] = $sql;
 
-  echo json_encode($data);
 }
 
 function get_select_cabang(){
@@ -2272,7 +2258,6 @@ function get_select_cabang(){
   $data['sql'] = $sql;
   $data['sqlpj'] = $strpj;
 
-  echo json_encode($data);
 }
 
 function get_select_call_status(){
@@ -2311,7 +2296,6 @@ function get_select_call_status(){
   $data['arrSel'] = $sel;
   $data['sql'] = $sql.' - '.$list_code;
 
-  echo json_encode($data);
 }
 
 function tele_idno($param, $conDB) {
@@ -2410,6 +2394,5 @@ function get_select_lastcall(){
   $data['arrSel'] = $sel;
   $data['sql'] = $sql.' - '.$list_code;
 
-  echo json_encode($data);
 }
 ?>

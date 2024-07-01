@@ -279,7 +279,6 @@ while($rec1 = mysqli_fetch_object($res1)) {
 		$sLimit
 	"; 
 	if($viewTrace === 1){
-		echo $sQuery;
 	}
 
 	$rResult = mysqli_query($condb,$sQuery);  
@@ -339,6 +338,5 @@ while($rec1 = mysqli_fetch_object($res1)) {
 	}
     
 disconnectDB($condb);	
-echo json_encode( $output );
 
 ?>

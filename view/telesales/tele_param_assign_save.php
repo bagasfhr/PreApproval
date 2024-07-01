@@ -65,7 +65,6 @@ if($iddet!==''){
 	}
 }
 
-echo $result;
 disconnectDB($condb);
 
 ?>

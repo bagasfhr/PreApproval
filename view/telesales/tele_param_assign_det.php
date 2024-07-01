@@ -70,21 +70,21 @@ if($iddet  === "") {
 
 
 ?>
-<form name="frmDataDet" id="frmDataDet" method="POST"><?php $idsec = get_session('idsec'); ?> <input type="hidden" name="idsec" id="idsec" value="<?php echo $idsec;?>">
-<input type="hidden" name="iddet" id="iddet" value="<?php echo $iddet;?>">
+<form name="frmDataDet" id="frmDataDet" method="POST"><?php $idsec = get_session('idsec'); ?> <input type="hidden" name="idsec" id="idsec" value="idsec" />
+<input type="hidden" name="iddet" id="iddet" value="iddet" />
 
-<input type="hidden" name="blist_date" id="blist_date" value="<?php echo $blist_date;?>">
-<input type="hidden" name="blist_fcount" id="blist_fcount" value="<?php echo $blist_fcount;?>">
-<input type="hidden" name="blist_csearch0" id="blist_csearch0" value="<?php echo $blist_csearch0;?>">
-<input type="hidden" name="blist_tsearch0" id="blist_tsearch0" value="<?php echo $blist_tsearch0;?>">
-<input type="hidden" name="blist_csearch1" id="blist_csearch1" value="<?php echo $blist_csearch1;?>">
-<input type="hidden" name="blist_tsearch1" id="blist_tsearch1" value="<?php echo $blist_tsearch1;?>">
-<input type="hidden" name="blist_csearch2" id="blist_csearch2" value="<?php echo $blist_csearch2;?>">
-<input type="hidden" name="blist_tsearch2" id="blist_tsearch2" value="<?php echo $blist_tsearch2;?>">
-<input type="hidden" name="blist_csearch3" id="blist_csearch3" value="<?php echo $blist_csearch3;?>">
-<input type="hidden" name="blist_tsearch3" id="blist_tsearch3" value="<?php echo $blist_tsearch3;?>">
-<input type="hidden" name="blist_csearch4" id="blist_csearch4" value="<?php echo $blist_csearch4;?>">
-<input type="hidden" name="blist_tsearch4" id="blist_tsearch4" value="<?php echo $blist_tsearch4;?>">
+<input type="hidden" name="blist_date" id="blist_date" value="blist_date" />
+<input type="hidden" name="blist_fcount" id="blist_fcount" value="blist_fcount" />
+<input type="hidden" name="blist_csearch0" id="blist_csearch0" value="blist_csearch0" />
+<input type="hidden" name="blist_tsearch0" id="blist_tsearch0" value="blist_tsearch0" />
+<input type="hidden" name="blist_csearch1" id="blist_csearch1" value="blist_csearch1" />
+<input type="hidden" name="blist_tsearch1" id="blist_tsearch1" value="blist_tsearch1" />
+<input type="hidden" name="blist_csearch2" id="blist_csearch2" value="blist_csearch2" />
+<input type="hidden" name="blist_tsearch2" id="blist_tsearch2" value="blist_tsearch2" />
+<input type="hidden" name="blist_csearch3" id="blist_csearch3" value="blist_csearch3" />
+<input type="hidden" name="blist_tsearch3" id="blist_tsearch3" value="blist_tsearch3" />
+<input type="hidden" name="blist_csearch4" id="blist_csearch4" value="blist_csearch4" />
+<input type="hidden" name="blist_tsearch4" id="blist_tsearch4" value="blist_tsearch4" />
 
 
 <div class="page-inner">
@@ -234,7 +234,7 @@ disconnectDB($condb);
 							 data.append('key', 'value');	
 							
 							 $.ajax({
-						        url: "<?php echo $save_form; ?>",
+						        url: "save_form; ?>",
 						        type: "post",
 						        data: data,
 							    processData: false,
@@ -279,7 +279,7 @@ disconnectDB($condb);
 						}
 					}).then((Save) => {
 						if (Save) {
-							var alink= "<?php echo $ffolder;?>|<?php echo $fmenu_link_back;?>|<?php echo $fdescription;?>|<?php echo $fmenu_id;?>|<?php echo $ficon;?>|<?php echo $fiddet;?>|<?php echo $fblist;?>"
+							var alink= "ffolder|fmenu_link_back|fdescription|fmenu_id|ficon|fiddet|fblist"
 							var link = "index.php?v="+encodeURI(btoa(alink));
 							window.location.href = link;
 						} else {
@@ -317,7 +317,7 @@ disconnectDB($condb);
 							 data.append('key', 'value');	
 							
 							 $.ajax({
-						        url: "<?php echo $save_form; ?>?v=del&iddet="+iddet,
+						        url: "save_form; ?>?v=del&iddet="+iddet,
 						        type: "post",
 						        data: data,
 							    processData: false,

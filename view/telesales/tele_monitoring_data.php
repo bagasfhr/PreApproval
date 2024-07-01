@@ -160,10 +160,10 @@ if($last_phonecall!==''){
 	 }
 
 	$sLimit = "";
-	if ( isset( $xxx = filter_input(INPUT_GET, 'iDisplayStart'] ) && $xxx = filter_input(INPUT_GET, 'iDisplayLength'] !== '-1' )
+	if ( isset( filter_input(INPUT_GET, 'iDisplayStart') ) && filter_input(INPUT_GET, 'iDisplayLength') !== '-1' )
 	{
-		$sLimit = "LIMIT ".inj3($condb, $xxx = filter_input(INPUT_GET, 'iDisplayStart'] ).", ".
-		inj3($condb, $xxx = filter_input(INPUT_GET, 'iDisplayLength'] );
+		$sLimit = "LIMIT ".inj3($condb, filter_input(INPUT_GET, 'iDisplayStart') ).", ".
+		inj3($condb, filter_input(INPUT_GET, 'iDisplayLength') );
 	}
 	
 	
@@ -234,7 +234,6 @@ if($last_phonecall!==''){
 		$sLimit
 	"; 
 	if($viewTrace === 1){
-		echo $sQuery;
 	}
 
 	$rResult = mysqli_query($condb,$sQuery);  
@@ -300,6 +299,6 @@ if($last_phonecall!==''){
 	}
     
 disconnectDB($condb);	
-echo json_encode( $output );
+
 
 ?>

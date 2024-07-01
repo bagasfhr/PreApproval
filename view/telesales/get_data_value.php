@@ -44,7 +44,7 @@ if($v==="call_status"){
 
 	
 	
-	echo json_encode($aReturn);
+
 }
 else if($v==="call_status2"){ 
 		$call_statusid = get_param("call_statusid");
@@ -65,7 +65,7 @@ else if($v==="call_status2"){
 
 	
 	
-	echo json_encode($aReturn);
+	
 }
 else if($v==="whskill"){
 	$skillid     	= get_param("skillid");
@@ -104,7 +104,7 @@ else if($v==="whskill"){
 	}
 
 	$aReturn['arr_agent'] = $arr_agent;
-	echo json_encode($aReturn);
+	
 
 }
 else if($v==="distribusi"){
@@ -134,7 +134,7 @@ else if($v==="distribusi"){
 
 	$aReturn['arr_checkbox'] 	    	= $arr_checkbox; 
 	
-	echo json_encode($aReturn);
+	
 } else if($v==="campaignid"){
 		$campid = get_param("campid");
 	    $arr_campaign= array();
@@ -150,7 +150,7 @@ else if($v==="distribusi"){
 		}
 	$aReturn['arr_campaign'] = $arr_campaign; 
 	
-	echo json_encode($aReturn);
+	
 } else if($v==="wskill"){
 		$skillid     	= get_param("skillid");
 		$val_search  	= get_param("val_search");
@@ -262,7 +262,7 @@ else if($v==="distribusi"){
 	
 	$aReturn['arr_agent'] = $arr_agent; 
 	
-	echo json_encode($aReturn);
+	
 }
 
 else if($v==="getsubcampaign"){ 
@@ -280,7 +280,7 @@ $aReturn['arr_category'] 	    	= $arr_category;
 
 
 
-echo json_encode($aReturn);
+
 }
 else if($v==="gettype"){ 
 	$cmbtype = get_param("cmbtype");
@@ -316,7 +316,7 @@ $aReturn['arr_category'] 	    	= $arr_category;
 
 
 
-echo json_encode($aReturn);
+
 }
 else if($v==="call_status_apr"){ 
 		$call_statusid = get_param("call_statusid");
@@ -336,7 +336,7 @@ else if($v==="call_status_apr"){
 
 	
 	
-	echo json_encode($aReturn);
+	
 }else if($v==="wsearch"){
 		$searchid = get_param("searchid");
 
@@ -382,7 +382,7 @@ else if($v==="call_status_apr"){
 
 	
 	
-	echo json_encode($aReturn);
+	
 }else if($v==="cek_consumer_detail"){ 
 		$iddet = get_param("iddet");
 
@@ -425,7 +425,7 @@ else if($v==="call_status_apr"){
 				$aReturn['office_phone_2']     		= $two_surv_jphon2; 
 		}
 
-	echo json_encode($aReturn);
+	
 }
 
 else if($v==="transtospv"){ 
@@ -450,8 +450,8 @@ else if($v==="transtospv"){
 				$chek = "";
 				$das  = "";
 			}
-			echo "<div style=\"float:left;width:70%; margin-left:30px;\"><label class='form-check-label'><input id='fomni_".$id."' name='campaignid[]' $chek $das class='form-check-input' type='checkbox' value='".$id."' onclick=\"check_insert(this.value)\" ><span class='form-check-sign'>&nbsp;&nbsp;".$campaign_code." / ".$campaign_name."</span></label></div>";	
-          
+			
+			
 		}
 
 
@@ -481,7 +481,7 @@ else if($v==="pro_offering"){
 
 
 
-echo json_encode($param_offering);
+
 }
 else if($v==="mlob"){ 
 	$mlob = get_param("mlob");
@@ -504,7 +504,7 @@ else if($v==="mlob"){
 
 
 
-	echo json_encode($aReturn);
+	
 }
 
 else if($v==="pro_offering2"){ 
@@ -525,7 +525,6 @@ else if($v==="pro_offering2"){
     $aReturn="0";
   }
 
-echo $aReturn;
 }
 
 else if($v==="pro_offering2_api"){ 
@@ -579,7 +578,7 @@ else if($v==="pro_offering2_api"){
 	$aResponse['param_pro_offering'] = $aReturn; 
 	$aResponse['three_tenor_api'] = $arr_tenor; 
 	$aResponse['link_api'] = $link; 
-	echo json_encode($aResponse);
+	
 }
 
 else if($v==="otr_api"){ 
@@ -617,7 +616,7 @@ else if($v==="otr_api"){
 
 	$aResponse['data_otr'] = $data_otr; 
 	$aResponse['link_api'] = $link; 
-	echo json_encode($aResponse);
+	
 }
 
 else if($v==="pro_offering3"){ 
@@ -638,7 +637,6 @@ else if($v==="pro_offering3"){
     $aReturn="0";
   }
 
-echo $aReturn;
 }
 
 else if($v==="get_prov"){
@@ -654,7 +652,7 @@ else if($v==="get_prov"){
 	$aReturn['arr_category'] 	= $arr_category; 
 	$aReturn['arr_category2'] 	= "<option value='' selected>-- Select --</select>"; 
 
-	echo json_encode($aReturn);
+	
 
 
 }
@@ -670,7 +668,7 @@ else if($v==="get_kecamatan"){
 	}
 	$aReturn['arr_category'] 	= $arr_category; 
 
-	echo json_encode($aReturn);
+	
 
 
 }
@@ -687,7 +685,7 @@ else if($v==="get_kelurahan"){
 	}
 	$aReturn['arr_category'] 	= $arr_category; 
 
-	echo json_encode($aReturn);
+	
 
 
 }
@@ -705,7 +703,7 @@ else if($v==="get_zipcode_survey"){
 	}
 	$aReturn['arr_category'] 	= $arr_category; 
 
-	echo json_encode($aReturn);
+	
 
 
 }
@@ -723,7 +721,7 @@ else if($v==="get_subzipcode_survey"){
 	}
 	$aReturn['arr_category'] 	= $arr_category; 
 
-	echo json_encode($aReturn);
+	
 
 
 }
@@ -748,7 +746,7 @@ $aReturn['arr_category2'] 	    	= "<option value=''>-- Select --</select>";
 
 
 
-echo json_encode($aReturn);
+
 }
 
 
@@ -783,7 +781,7 @@ $aReturn['arr_category'] 	    	= $arr_category;
 
 
 
-echo json_encode($aReturn);
+
 }
 
 else if($v==="asset3"){ 
@@ -817,7 +815,7 @@ $aReturn['arr_kategori'] 	    = $kategori_kendaraan;
 
 
 
-echo json_encode($aReturn);
+
 }
 
 else if($v==="get_dealer"){ 
@@ -834,7 +832,7 @@ else if($v==="get_dealer"){
 	$aReturn['query'] 			= $sql_str1;
 	$aReturn['arr_category'] 	= $sel;
 
-	echo json_encode($aReturn);
+	
 }else if($v==="get_cabang_by_region"){
     $v_agentid = get_session('v_agentid');
     $region_code = get_param("region_code");
@@ -878,11 +876,11 @@ else if($v==="get_dealer"){
 		where 1=1 $where_region";
     $sql_res1  = execSQL($condb, $sql_str1);
     while (($sql_rec1 = mysqli_fetch_object($sql_res1)) === TRUE) {
-      $sid = $sql_rec1->office_name'];
+      $sid = $sql_rec1->office_name;
       if($sid === $data[$sid]) {
-        $sel .= "<option value=\"".$sql_rec1->office_code']."\" selected>".$sql_rec1->office_name']."</option>";  
+        $sel .= "<option value=\"".$sql_rec1->office_code']."\" selected>".$sql_rec1->office_name."</option>";  
       } else {
-        $sel .= "<option value=\"".$sql_rec1->office_code']."\" >".$sql_rec1->office_name']."</option>";  
+        $sel .= "<option value=\"".$sql_rec1->office_code']."\" >".$sql_rec1->office_name."</option>";  
 
       }
     }
@@ -890,7 +888,6 @@ else if($v==="get_dealer"){
 	$aReturn["query"] = $sql_str1;
 	$aReturn["arr_category"] = $sel;
 
-echo json_encode($aReturn);
 
 }else if($v==="get_kabupaten"){
     $sel = "";
@@ -934,7 +931,6 @@ echo json_encode($aReturn);
 
 	$aReturn["query"] = $sql_legal_kab;
 	$aReturn["arr_category"] = $sel;
-	echo json_encode($aReturn);
 }
 
 disconnectDB($condb);

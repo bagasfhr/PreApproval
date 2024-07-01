@@ -97,9 +97,9 @@ if (file_exists($path)) {
 </div>
 
 <div class="modal fade bd-example-modal-lg " id="modal_history" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
-    <div class="modal-dialog modal-lg" role="document" style="border: 2px solid black;border-radius:10px 10px 0px 0px; "> <!-- <?php echo $master_borderdominant_color ?> -->
+    <div class="modal-dialog modal-lg" role="document" style="border: 2px solid black;border-radius:10px 10px 0px 0px; "> 
         <div class="modal-content" class="border border-primary">
-            <div class="modal-header" style="background:black;color:white"> <!-- <?php echo $dominant_mastercolor ?> -->
+            <div class="modal-header" style="background:black;color:white"> 
             <h4 class="modal-title" id="myModalLabel4">History Call</h4>
             </div>
             <div class="modal-body" style="background:white">

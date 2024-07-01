@@ -909,9 +909,9 @@ $sqlall = "INSERT INTO cc_ts_penawaran_history2 (form_id,
                 SELECT '$form_id','$add_asset_id',a.*,'$v_agentid',NOW() FROM cc_ts_penawaran_temp a
                         WHERE a.id='$iddet'"; 
 if($rec_u = mysqli_query($condb,$sqlall)) {
-    echo "Success!";
+    
 } else {
-    echo "Failed";
+    
 }
  
 disconnectDB($condb);
