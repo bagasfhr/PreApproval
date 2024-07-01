@@ -14,13 +14,13 @@ if (file_exists($path)) {
 
 $condb = connectDB();
 
-$nik               = $xxx = filter_input(INPUT_GET, 'nik'];
-$customer_id       = $xxx = filter_input(INPUT_GET, 'customer_id'];
-$PreApproval       = $xxx = filter_input(INPUT_GET, 'PreApproval'];
-$custname          = $xxx = filter_input(INPUT_GET, 'nama_lengkap'];
-$birthplace        = $xxx = filter_input(INPUT_GET, 'tempat_lahir'];
-$bod               = $xxx = filter_input(INPUT_GET, 'tgl_lahir']; 
-$app_no            = $xxx = filter_input(INPUT_GET, 'app_no'];
+$nik = filter_input(INPUT_GET, 'nik');
+$customer_id = filter_input(INPUT_GET, 'customer_id');
+$PreApproval = filter_input(INPUT_GET, 'PreApproval');
+$custname = filter_input(INPUT_GET, 'nama_lengkap');
+$birthplace = filter_input(INPUT_GET, 'tempat_lahir');
+$bod = filter_input(INPUT_GET, 'tgl_lahir'); 
+$app_no = filter_input(INPUT_GET, 'app_no');
 $sqlpreapr = "";
 if ($PreApproval===1) {
   $sqlpreapr = ', "IsPreApproval":"1"';
@@ -98,18 +98,17 @@ if ($PreApproval===1) {
     }
 
     $response = str_replace('"responseCode":"00",', '"responseCode":"00","responseTotal":"'.$response_total.'", "responseCabang":"'.$response_cabang.'",', $response);
-    echo $response;
 
 
 $responseMessage        = $resp[0]['ResponseMessage'];
 
-$sqllog = "INSERT INTO cc_respons_log SET
+$sqllog->prepare("INSERT INTO cc_respons_log SET
                 type_api            ='API_Check_Negative', 
                 url_api             ='http://10.0.89.213:8080/cae_score', 
                 post_api            ='$payload', 
                 respon_status       ='$responseMessage', 
                 respon_desc         ='$response', 
-                respon_time         =now()";
+                respon_time         =now()");
 $reslog = mysqli_query($condb,$sqllog);
 
 

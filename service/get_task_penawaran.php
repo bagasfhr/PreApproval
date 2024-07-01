@@ -39,13 +39,8 @@ function disconnectDB($db_connect) {
 
 if ($con) {
 } else {
-    echo "Koneksi gagal !";
-    die(print_r(mssql_error(),true));
 }
 
-echo "Process...";
-echo "<br>";
-echo "<br>";
 $dateexe = DATE("Y-m-d H:i:s");
 $dbopen  = connectDB();
 
@@ -1303,8 +1298,6 @@ disconnectDB($dbopen);
 
 mssql_close($con);
 
-echo "Sync Data POLO_ELIGIBLE OK <br><br><br>";
 
-echo "Sync Process Done <br>";
 
 ?>

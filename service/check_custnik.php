@@ -14,20 +14,20 @@ if (file_exists($path)) {
 
 $condb = connectDB();
 
-$nik            = $xxx = filter_input(INPUT_GET, 'nik'];
-$custname       = $xxx = filter_input(INPUT_GET, 'nama_lengkap'];
-$birthplace     = $xxx = filter_input(INPUT_GET, 'tempat_lahir'];
-$bod            = $xxx = filter_input(INPUT_GET, 'tgl_lahir']; 
-$user_name      = $xxx = filter_input(INPUT_GET, 'user_name'];
-$emp_name       = $xxx = filter_input(INPUT_GET, 'emp_name'];
-$office_code    = $xxx = filter_input(INPUT_GET, 'office_code'];
-$office_name    = $xxx = filter_input(INPUT_GET, 'office_name'];
-$region         = $xxx = filter_input(INPUT_GET, 'region']; 
-$cust_no        = $xxx = filter_input(INPUT_GET, 'cust_no'];
-$app_no         = $xxx = filter_input(INPUT_GET, 'app_no'];
-$ip_user        = $xxx = filter_input(INPUT_GET, 'ip_user'];
-$source         = $xxx = filter_input(INPUT_GET, 'source'];
-$mothername     = $xxx = filter_input(INPUT_GET, 'mother_name'];
+$nik = filter_input(INPUT_GET, 'nik');
+$custname = filter_input(INPUT_GET, 'nama_lengkap');
+$birthplace = filter_input(INPUT_GET, 'tempat_lahir');
+$bod = filter_input(INPUT_GET, 'tgl_lahir'); 
+$user_name = filter_input(INPUT_GET, 'user_name');
+$emp_name = filter_input(INPUT_GET, 'emp_name');
+$office_code = filter_input(INPUT_GET, 'office_code');
+$office_name = filter_input(INPUT_GET, 'office_name');
+$region = filter_input(INPUT_GET, 'region'); 
+$cust_no = filter_input(INPUT_GET, 'cust_no');
+$app_no = filter_input(INPUT_GET, 'app_no');
+$ip_user = filter_input(INPUT_GET, 'ip_user');
+$source = filter_input(INPUT_GET, 'source');
+$mothername = filter_input(INPUT_GET, 'mother_name');
 $dateexe = DATE("Y-m-d H:i:s");
 
     $curl = curl_init();
@@ -80,16 +80,16 @@ $dateexe = DATE("Y-m-d H:i:s");
         
     }
     
-echo "$param_resp";
 
-$sqllog = "INSERT INTO cc_respons_log SET
+
+$sqllog->prepare("INSERT INTO cc_respons_log SET
                 type_api            ='API_Check_CustomerPreApproval', 
                 url_api             ='$url', 
                 post_api            ='$payload', 
                 respon_status       ='$responseMessage', 
                 respon_desc         ='$response', 
                 respon_exe          ='$dateexe', 
-                respon_time         =now()";
+                respon_time         =now()");
 $reslog = mysqli_query($condb,$sqllog);
 
 

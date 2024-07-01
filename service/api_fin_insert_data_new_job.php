@@ -13,9 +13,9 @@ if (file_exists($path)) {
 }
 
 $idName              = "UPDATE_FROM_CRM"; 
-$agrmntid              = $xxx = filter_input(INPUT_GET, 'agrmntid']; 
-$distributedDate     = $xxx = filter_input(INPUT_GET, 'distributedDate']; 
-$no_pengajuan        = $xxx = filter_input(INPUT_GET, 'no_pengajuan']; 
+$agrmntid = filter_input(INPUT_GET, 'agrmntid'); 
+$distributedDate = filter_input(INPUT_GET, 'distributedDate'); 
+$no_pengajuan = filter_input(INPUT_GET, 'no_pengajuan'); 
 $whr_sql = " AGRMNT_ID='$agrmntid' ";
 if ($no_pengajuan !=="") {
     $whr_sql = " no_pengajuan='$no_pengajuan' ";

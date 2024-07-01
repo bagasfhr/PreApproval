@@ -13,9 +13,9 @@ if (file_exists($path)) {
 }
 
 $idName              = "UPDATE_FROM_CRM"; 
-$taskId              = $xxx = filter_input(INPUT_GET, 'taskId']; 
-$distributedDate     = $xxx = filter_input(INPUT_GET, 'distributedDate']; 
-$no_pengajuan        = $xxx = filter_input(INPUT_GET, 'no_pengajuan'];  
+$taskId = filter_input(INPUT_GET, 'taskId'); 
+$distributedDate = filter_input(INPUT_GET, 'distributedDate'); 
+$no_pengajuan = filter_input(INPUT_GET, 'no_pengajuan');  
 $whr_sql = " task_id='$taskId' ";
 if ($no_pengajuan !=="") {
     $whr_sql = " no_pengajuan='$no_pengajuan' ";
@@ -36,7 +36,7 @@ while($recsubct = mysqli_fetch_object($ressubct)){
   $arrsubcat[$recsubct["id"]] = $recsubct->call_status_sub1;
 }
 
-$sql12 = " SELECT * FROM cc_ts_penawaran WHERE $whr_sql ";
+$sql12->prepare("SELECT * FROM cc_ts_penawaran WHERE $whr_sql");
 $res12 = mysqli_query($condb, $sql12);
 if($rec12 = mysqli_fetch_object($res12)) {
   $customer_id     = $rec12->customer_id;
@@ -46,7 +46,7 @@ $sqlwhr=" (customer_id='$customer_id' OR customer_id_ro='$customer_id_ro') AND c
 if ($customer_id==='') {
     $sqlwhr=" $whr_sql ";
 }
-$sqla = "SELECT * FROM cc_ts_penawaran WHERE $sqlwhr";
+$sqla->prepare("SELECT * FROM cc_ts_penawaran WHERE $sqlwhr");
 $resa = mysqli_query($condb,$sqla);
 while($reca = mysqli_fetch_object($resa)){
     @extract($reca,EXTR_OVERWRITE);
@@ -57,32 +57,32 @@ while($reca = mysqli_fetch_object($resa)){
     $num_duplicate=0;
     $paramduplicate = strpos($source_data,"WISE");
     if($paramduplicate >=0){
-        $sql12 = " SELECT * FROM cc_ts_simulasi a
+        $sql12->prepare(" SELECT * FROM cc_ts_simulasi a
                    WHERE a.id_cust_detail='$id' AND a.num_duplicate>0
-                   AND a.modif_by='$last_followup_by' ";
+                   AND a.modif_by='$last_followup_by')";
         $res12 = mysqli_query($condb, $sql12);
         if($rec12 = mysqli_fetch_object($res12)) {
           $id_simulasi     = $rec12->id;
           $num_duplicate   = $rec12->num_duplicate;
 
-          $sqlupall = "UPDATE cc_ts_simulasi SET    
+          $sqlupall->prepare("UPDATE cc_ts_simulasi SET    
                           num_duplicate = '0',
                           last_num_duplicate = '$num_duplicate'
-                   WHERE id ='$id_simulasi'";
+                   WHERE id ='$id_simulasi'");
           mysqli_query($condb,$sqlupall);
         }
     }
 
 
-$sqlupall = "UPDATE cc_ts_simulasi SET    
+$sqlupall->prepare("UPDATE cc_ts_simulasi SET    
                 sla_date = '$datesla'
-         WHERE id_cust_detail ='$id'";
+         WHERE id_cust_detail ='$id'");
 mysqli_query($condb,$sqlupall);
 
 
-        $sql12 = " SELECT a.agent_name, b.emp_name, c.referantor_id, c.referantor_no, c.referantor_name FROM cc_agent_profile a 
+        $sql12->prepare(" SELECT a.agent_name, b.emp_name, c.referantor_id, c.referantor_no, c.referantor_name FROM cc_agent_profile a 
                  LEFT JOIN cc_employee b ON a.agent_id=b.ref_no
-                 LEFT JOIN cc_master_referantor c ON b.ref_emp_id=c.ref_emp_id WHERE a.id='$last_followup_by' ";
+                 LEFT JOIN cc_master_referantor c ON b.ref_emp_id=c.ref_emp_id WHERE a.id='$last_followup_by' ");
         $res12 = mysqli_query($condb, $sql12);
         if($rec12 = mysqli_fetch_object($res12)) {
           $referantor_id   = $rec12->referantor_id;
@@ -90,7 +90,7 @@ mysqli_query($condb,$sqlupall);
           $referantor_name = $rec12->referantor_name;
         }
     
-    $sqlcs = "SELECT b.call_status, a.sub_result FROM cc_ts_penawaran_call_session a LEFT JOIN cc_ts_call_status b  ON a.result=b.id WHERE a.task_id='$taskId' ORDER BY a.id DESC LIMIT 1 ";
+    $sqlcs->prepare("SELECT b.call_status, a.sub_result FROM cc_ts_penawaran_call_session a LEFT JOIN cc_ts_call_status b  ON a.result=b.id WHERE a.task_id='$taskId' ORDER BY a.id DESC LIMIT 1 ");
     $rescs = mysqli_query($condb,$sqlcs);
     if($reccs = mysqli_fetch_object($rescs)){
         $call_status2         = $reccs->call_status;
@@ -121,14 +121,14 @@ mysqli_query($condb,$sqlupall);
     $SubStatusCall = $arrsubcat[$sub_result];
 
     if ($call_status==='4') {
-          $sqlcallback = "UPDATE cc_call_back SET    
+          $sqlcs->prepare("UPDATE cc_call_back SET    
                           notif_flag = '0'
-                   WHERE com_ticket ='$id' AND notif_flag='99'";
+                   WHERE com_ticket ='$id' AND notif_flag='99'");
           mysqli_query($condb,$sqlcallback);
     }
 
 
-    $sqlcs = "SELECT a.agent_name FROM cc_agent_profile a WHERE a.id='$last_followup_by' ";
+    $sqlcs->prepare("SELECT a.agent_name FROM cc_agent_profile a WHERE a.id='$last_followup_by' ");
     $rescs = mysqli_query($condb,$sqlcs);
     if($reccs = mysqli_fetch_object($rescs)){
         $agent_name         = $reccs->agent_name;
@@ -157,7 +157,7 @@ mysqli_query($condb,$sqlupall);
     
 
 
-$sqlsa = "SELECT 
+$sqlsa->prepare("SELECT 
             a.id, a.id_penawaran, a.assets_type, a.assets_name, a.assets_type_desc, a.assets_desc,
             a.engine_no, a.license_plate, a.chasis_no, a.manufacturing_year, a.asset_ownership, a.product_offering, 
             a.asset_price, a.platfond_max, a.tenor, a.ltv, a.instalment, a.ltv_persen, a.kategori_asset
@@ -165,7 +165,7 @@ $sqlsa = "SELECT
             cc_ts_penawaran_add_assets a 
           WHERE 
             a.task_id='$taskId'
-          ORDER BY a.update_time DESC LIMIT 1";
+          ORDER BY a.update_time DESC LIMIT 1");
 $ressa = mysqli_query($condb,$sqlsa);
 $no=1;
 if($recsa = mysqli_fetch_object($ressa)){
@@ -644,11 +644,11 @@ if($recsa = mysqli_fetch_object($ressa)){
     
     $payload = $data;
 
-    $sqllog = "INSERT INTO cc_respons_log SET
+    $sqllog->prepare("INSERT INTO cc_respons_log SET
                     type_api            ='API_UPDATE_Data_To_POLO2', 
                     url_api             ='$url', 
                     post_api            ='$payload', 
-                    respon_exe          =now()";
+                    respon_exe          =now()");
     $reslog = mysqli_query($condb,$sqllog);
     $idlog  = mysqli_insert_id($condb);
 
@@ -673,16 +673,15 @@ if($recsa = mysqli_fetch_object($ressa)){
 
 
 $responseMessage        = $resp[0]['responseMessage'];
-$sqllog = "UPDATE cc_respons_log SET
+$sqllog->prepare("UPDATE cc_respons_log SET
                 respon_status       ='$responseMessage', 
                 respon_desc         ='$result',  
                 respon_time         =now()
-                WHERE id='$idlog'";
+                WHERE id='$idlog'");
 $reslog = mysqli_query($condb,$sqllog);
 sleep(5);
 }
 $result = '{"responseCode":"00","responseMessage":"SUCCESS","data":"POL000493995"}';
-echo $result;
 
 
 disconnectDB($condb);
