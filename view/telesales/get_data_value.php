@@ -554,8 +554,8 @@ else if($v==="pro_offering2_api"){
 	$ch = curl_init(); 
 	curl_setopt($ch, CURLOPT_URL, $link);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 	$result = curl_exec($ch); 
 	$obj = json_decode($result, true);
 
@@ -594,8 +594,8 @@ else if($v==="otr_api"){
 	$ch = curl_init(); 
 	curl_setopt($ch, CURLOPT_URL, $link);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 	$result = curl_exec($ch); 
 	$obj = json_decode($result, true);
 
